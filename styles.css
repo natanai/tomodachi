@@ -42,7 +42,32 @@ select {
   border-radius: 8px;
 }
 
-.description { margin-top: 8px; }
+
+.description {
+  margin-top: 8px;
+  display: grid;
+  gap: 4px;
+}
+
+.personality-title {
+  display: inline-block;
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--personality-color) 22%, white 78%);
+  border: 2px solid var(--personality-color);
+  font-weight: 700;
+}
+
+.personality-subtitle {
+  font-size: 0.9rem;
+  color: #4b4b4b;
+}
+
+.personality-range {
+  font-size: 0.95rem;
+}
+
 .hint { margin-top: 2px; color: #555; }
 
 .slider-grid { display: grid; gap: 12px; }
