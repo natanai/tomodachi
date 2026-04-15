@@ -9,30 +9,34 @@
 <body>
   <main class="app">
     <h1>Tomodachi Life: Living the Dream</h1>
-    <p class="subtitle">Personality Goal Tool</p>
+    <p class="subtitle">Personality Goal Planner (Old Math + New Names)</p>
 
     <section class="panel controls">
       <label for="personalitySelect">Choose your target personality</label>
       <select id="personalitySelect"></select>
-      <p id="description" class="description"></p>
+      <p id="goalBands" class="description"></p>
+      <p class="hint">Click boxes to place your own check marks. Clear a row to unselect.</p>
     </section>
 
     <section class="panel sliders-panel">
-      <h2>Slider options that can produce this result</h2>
+      <h2>Build your sliders</h2>
       <div id="sliderGrid" class="slider-grid"></div>
     </section>
 
     <section class="panel breakdown">
-      <h2>Valid combinations</h2>
-      <p><strong>Movement + Speech range:</strong> <span id="msRange"></span></p>
-      <p><strong>Energy + Attitude range:</strong> <span id="eaRange"></span></p>
-      <p><strong>Total possible full builds (including Overall):</strong> <span id="totalBuilds"></span></p>
+      <h2>Result + valid ranges</h2>
+      <p><strong>Your current personality result:</strong> <span id="currentResult">Not enough values selected yet.</span></p>
+      <p><strong>Movement + Speech sum:</strong> <span id="msSum">—</span></p>
+      <p><strong>Energy + Attitude sum:</strong> <span id="eaSum">—</span></p>
+      <p><strong>Movement + Speech goal band:</strong> <span id="msRange"></span></p>
+      <p><strong>Energy + Attitude goal band:</strong> <span id="eaRange"></span></p>
+      <p><strong>Total possible full builds for this goal (including Overall):</strong> <span id="totalBuilds"></span></p>
       <details>
-        <summary>See all Movement/Speech pairs</summary>
+        <summary>See all Movement/Speech pairs for this goal</summary>
         <pre id="msPairs"></pre>
       </details>
       <details>
-        <summary>See all Energy/Attitude pairs</summary>
+        <summary>See all Energy/Attitude pairs for this goal</summary>
         <pre id="eaPairs"></pre>
       </details>
     </section>

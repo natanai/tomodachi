@@ -1,84 +1,199 @@
-const GROUPS = {
-  low: [0, 7],
-  high: [8, 15]
-};
-
-const PERSONALITIES = [
-  ["Softie (Sweetie)", "Easy-going (Considerate)", "low", "high"],
-  ["Carer (Buddy)", "Easy-going (Considerate)", "low", "midHigh"],
-  ["Optimist (Cheerleader)", "Easy-going (Considerate)", "low", "midLow"],
-  ["Dreamer (Daydreamer)", "Easy-going (Considerate)", "low", "low"],
-
-  ["Charmer", "Energetic (Outgoing)", "high", "high"],
-  ["Adventurer (Go-Getter)", "Energetic (Outgoing)", "high", "midHigh"],
-  ["Bubbly (Merrymaker)", "Energetic (Outgoing)", "high", "midLow"],
-  ["Hot-Blooded (Dynamo)", "Energetic (Outgoing)", "high", "low"],
-
-  ["Patient (Strategist)", "Reserved", "low", "high"],
-  ["Perfectionist", "Reserved", "low", "midHigh"],
-  ["Introvert (Observer)", "Reserved", "low", "midLow"],
-  ["Thinker", "Reserved", "low", "low"],
-
-  ["Busy Bee (Achiever)", "Confident (Ambitious)", "high", "high"],
-  ["Leader (Visionary)", "Confident (Ambitious)", "high", "midHigh"],
-  ["Individualist (Rouge)", "Confident (Ambitious)", "high", "midLow"],
-  ["Headstrong (Maverick)", "Confident (Ambitious)", "high", "low"]
+const BANDS = [
+  [0, 3],
+  [4, 7],
+  [8, 11],
+  [12, 15]
 ];
 
-const VERTICAL_BANDS = {
-  high: [12, 15],
-  midHigh: [8, 11],
-  midLow: [4, 7],
-  low: [0, 3]
+const BAND_LABELS = ["0–3", "4–7", "8–11", "12–15"];
+
+// Uses old-game determination math (4x4 grid by sums), with latest-game wording.
+const PERSONALITY_GRID = [
+  ["Dreamer (Daydreamer)", "Hot-Blooded (Dynamo)", "Thinker", "Headstrong (Maverick)"],
+  ["Optimist (Cheerleader)", "Bubbly (Merrymaker)", "Introvert (Observer)", "Individualist (Rouge)"],
+  ["Carer (Buddy)", "Adventurer (Go-Getter)", "Perfectionist", "Leader (Visionary)"],
+  ["Softie (Sweetie)", "Charmer", "Patient (Strategist)", "Busy Bee (Achiever)"]
+];
+
+const COLUMN_GROUPS = [
+  "Easy-going (Considerate)",
+  "Energetic (Outgoing)",
+  "Reserved",
+  "Confident (Ambitious)"
+];
+
+const SLIDERS = [
+  ["movement", "Movement", "Slow", "Quick"],
+  ["speech", "Speech", "Polite", "Direct"],
+  ["energy", "Energy", "Flat", "Intense"],
+  ["attitude", "Attitude", "Serious", "Relaxed"],
+  ["overall", "Overall", "Normal", "Quirky"]
+];
+
+const picks = {
+  movement: null,
+  speech: null,
+  energy: null,
+  attitude: null,
+  overall: null
 };
 
 const selectEl = document.getElementById('personalitySelect');
-const descriptionEl = document.getElementById('description');
+const goalBandsEl = document.getElementById('goalBands');
 const sliderGridEl = document.getElementById('sliderGrid');
+const currentResultEl = document.getElementById('currentResult');
+const msSumEl = document.getElementById('msSum');
+const eaSumEl = document.getElementById('eaSum');
 const msRangeEl = document.getElementById('msRange');
 const eaRangeEl = document.getElementById('eaRange');
 const totalBuildsEl = document.getElementById('totalBuilds');
 const msPairsEl = document.getElementById('msPairs');
 const eaPairsEl = document.getElementById('eaPairs');
 
-PERSONALITIES.forEach(([name, group], index) => {
+const GOALS = buildGoals();
+
+GOALS.forEach((goal, index) => {
   const option = document.createElement('option');
   option.value = index;
-  option.textContent = `${name} — ${group}`;
+  option.textContent = `${goal.name} — ${goal.group}`;
   selectEl.appendChild(option);
 });
 
-selectEl.addEventListener('change', () => render(parseInt(selectEl.value, 10)));
-render(0);
+selectEl.addEventListener('change', render);
+render();
 
-function render(index) {
-  const [name, group, msBandName, eaBandName] = PERSONALITIES[index];
-  const msBand = msBandName === 'high' ? GROUPS.high : GROUPS.low;
-  const eaBand = VERTICAL_BANDS[eaBandName];
+function buildGoals() {
+  const goals = [];
+  for (let row = 0; row < PERSONALITY_GRID.length; row += 1) {
+    for (let col = 0; col < PERSONALITY_GRID[row].length; col += 1) {
+      goals.push({
+        name: PERSONALITY_GRID[row][col],
+        group: COLUMN_GROUPS[col],
+        msBand: BANDS[col],
+        eaBand: BANDS[row],
+        msBandLabel: BAND_LABELS[col],
+        eaBandLabel: BAND_LABELS[row]
+      });
+    }
+  }
+  return goals;
+}
 
-  const msPairs = buildPairs(msBand[0], msBand[1]);
-  const eaPairs = buildPairs(eaBand[0], eaBand[1]);
+function render() {
+  const goal = GOALS[parseInt(selectEl.value || '0', 10)];
+  const msPairs = buildPairs(goal.msBand[0], goal.msBand[1]);
+  const eaPairs = buildPairs(goal.eaBand[0], goal.eaBand[1]);
 
-  const movementAllowed = collectValues(msPairs, 0);
-  const speechAllowed = collectValues(msPairs, 1);
-  const energyAllowed = collectValues(eaPairs, 0);
-  const attitudeAllowed = collectValues(eaPairs, 1);
-  const overallAllowed = [0, 1, 2, 3, 4, 5, 6, 7];
-
-  descriptionEl.textContent = `Goal: ${name} (${group}). Pick any values highlighted in green. Orange is one sample value from the chart aesthetic.`;
-
-  sliderGridEl.innerHTML = '';
-  addSlider('Movement', 'Slow', 'Quick', movementAllowed);
-  addSlider('Speech', 'Polite', 'Direct', speechAllowed);
-  addSlider('Energy', 'Flat', 'Intense', energyAllowed);
-  addSlider('Attitude', 'Serious', 'Relaxed', attitudeAllowed);
-  addSlider('Overall', 'Normal', 'Quirky', overallAllowed);
-
-  msRangeEl.textContent = `${msBand[0]} to ${msBand[1]}`;
-  eaRangeEl.textContent = `${eaBand[0]} to ${eaBand[1]}`;
+  goalBandsEl.textContent = `Goal uses old-game sum math: (Movement + Speech) in ${goal.msBandLabel}, and (Energy + Attitude) in ${goal.eaBandLabel}.`;
+  msRangeEl.textContent = `${goal.msBand[0]} to ${goal.msBand[1]}`;
+  eaRangeEl.textContent = `${goal.eaBand[0]} to ${goal.eaBand[1]}`;
   totalBuildsEl.textContent = `${msPairs.length * eaPairs.length * 8} combinations`;
   msPairsEl.textContent = pairLines('Movement + Speech', msPairs);
   eaPairsEl.textContent = pairLines('Energy + Attitude', eaPairs);
+
+  renderSliders(goal);
+  renderCurrentResult(goal);
+}
+
+function renderSliders(goal) {
+  sliderGridEl.innerHTML = '';
+  SLIDERS.forEach(([key, label, left, right]) => {
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+
+    const trait = document.createElement('div');
+    trait.className = 'trait';
+    trait.textContent = label;
+
+    const leftPole = document.createElement('div');
+    leftPole.className = 'pole';
+    leftPole.textContent = left;
+
+    const boxes = document.createElement('div');
+    boxes.className = 'boxes';
+
+    for (let i = 0; i < 8; i += 1) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'box';
+      btn.textContent = i;
+      btn.setAttribute('aria-label', `${label} ${i}`);
+
+      if (isAllowedForGoal(key, i, goal)) btn.classList.add('allowed');
+      if (picks[key] === i) {
+        btn.classList.add('selected');
+        btn.textContent = '✓';
+      }
+
+      btn.addEventListener('click', () => {
+        picks[key] = picks[key] === i ? null : i;
+        render();
+      });
+
+      boxes.appendChild(btn);
+    }
+
+    const rightPole = document.createElement('div');
+    rightPole.className = 'pole';
+    rightPole.textContent = right;
+
+    row.append(trait, leftPole, boxes, rightPole);
+    sliderGridEl.appendChild(row);
+  });
+}
+
+function isAllowedForGoal(key, value, goal) {
+  if (key === 'overall') return true;
+
+  const draft = { ...picks, [key]: value };
+  for (let m = 0; m <= 7; m += 1) {
+    if (draft.movement !== null && draft.movement !== m) continue;
+    for (let s = 0; s <= 7; s += 1) {
+      if (draft.speech !== null && draft.speech !== s) continue;
+      const ms = m + s;
+      if (ms < goal.msBand[0] || ms > goal.msBand[1]) continue;
+
+      for (let e = 0; e <= 7; e += 1) {
+        if (draft.energy !== null && draft.energy !== e) continue;
+        for (let a = 0; a <= 7; a += 1) {
+          if (draft.attitude !== null && draft.attitude !== a) continue;
+          const ea = e + a;
+          if (ea >= goal.eaBand[0] && ea <= goal.eaBand[1]) return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function renderCurrentResult(goal) {
+  const hasMs = picks.movement !== null && picks.speech !== null;
+  const hasEa = picks.energy !== null && picks.attitude !== null;
+
+  msSumEl.textContent = hasMs ? `${picks.movement + picks.speech}` : '—';
+  eaSumEl.textContent = hasEa ? `${picks.energy + picks.attitude}` : '—';
+
+  if (!hasMs || !hasEa) {
+    currentResultEl.textContent = 'Not enough values selected yet.';
+    currentResultEl.className = '';
+    return;
+  }
+
+  const msBand = findBandIndex(picks.movement + picks.speech);
+  const eaBand = findBandIndex(picks.energy + picks.attitude);
+  const resultName = PERSONALITY_GRID[eaBand][msBand];
+  const resultGroup = COLUMN_GROUPS[msBand];
+  const matchesGoal = resultName === goal.name;
+
+  currentResultEl.textContent = `${resultName} — ${resultGroup}${matchesGoal ? ' (matches target)' : ''}`;
+  currentResultEl.className = matchesGoal ? 'ok' : 'warn';
+}
+
+function findBandIndex(sum) {
+  for (let i = 0; i < BANDS.length; i += 1) {
+    if (sum >= BANDS[i][0] && sum <= BANDS[i][1]) return i;
+  }
+  return 0;
 }
 
 function buildPairs(minSum, maxSum) {
@@ -90,46 +205,6 @@ function buildPairs(minSum, maxSum) {
     }
   }
   return pairs;
-}
-
-function collectValues(pairs, index) {
-  return [...new Set(pairs.map((pair) => pair[index]))].sort((a, b) => a - b);
-}
-
-function addSlider(label, left, right, allowedValues) {
-  const row = document.createElement('div');
-  row.className = 'slider-row';
-
-  const trait = document.createElement('div');
-  trait.className = 'trait';
-  trait.textContent = label;
-
-  const leftPole = document.createElement('div');
-  leftPole.className = 'pole';
-  leftPole.textContent = left;
-
-  const boxes = document.createElement('div');
-  boxes.className = 'boxes';
-
-  for (let i = 0; i < 8; i += 1) {
-    const box = document.createElement('div');
-    box.className = 'box';
-    if (allowedValues.includes(i)) box.classList.add('allowed');
-    if (i === allowedValues[0]) {
-      box.classList.add('selected');
-      box.textContent = '✓';
-    } else {
-      box.textContent = i;
-    }
-    boxes.appendChild(box);
-  }
-
-  const rightPole = document.createElement('div');
-  rightPole.className = 'pole';
-  rightPole.textContent = right;
-
-  row.append(trait, leftPole, boxes, rightPole);
-  sliderGridEl.appendChild(row);
 }
 
 function pairLines(title, pairs) {

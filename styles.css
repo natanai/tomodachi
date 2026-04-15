@@ -4,7 +4,7 @@
   --border: #ddb53e;
   --text: #232323;
   --green: #66c59b;
-  --orange: #f2a340;
+  --orange: #f07d12;
   --light-orange: #f7c98d;
 }
 
@@ -22,10 +22,7 @@ body {
   padding: 24px 16px 40px;
 }
 
-h1 {
-  margin-bottom: 4px;
-  text-align: center;
-}
+h1 { margin-bottom: 4px; text-align: center; }
 .subtitle { text-align: center; margin-top: 0; }
 
 .panel {
@@ -45,12 +42,10 @@ select {
   border-radius: 8px;
 }
 
-.description { margin-top: 8px; min-height: 2lh; }
+.description { margin-top: 8px; }
+.hint { margin-top: 2px; color: #555; }
 
-.slider-grid {
-  display: grid;
-  gap: 12px;
-}
+.slider-grid { display: grid; gap: 12px; }
 
 .slider-row {
   display: grid;
@@ -77,6 +72,7 @@ select {
   place-items: center;
   font-weight: 700;
   font-size: 0.9rem;
+  cursor: pointer;
 }
 
 .box.allowed {
@@ -87,8 +83,16 @@ select {
 .box.selected {
   background: var(--orange);
   color: white;
-  border-color: #d47d00;
+  border-color: #cf6500;
 }
+
+.box:focus-visible {
+  outline: 3px solid #2b66da;
+  outline-offset: 2px;
+}
+
+.ok { color: #1a7f37; font-weight: 700; }
+.warn { color: #b54708; font-weight: 700; }
 
 pre {
   white-space: pre-wrap;
