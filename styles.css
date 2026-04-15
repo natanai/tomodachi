@@ -86,6 +86,14 @@ select {
   border-color: #cf6500;
 }
 
+.box.disabled,
+.box:disabled {
+  background: #d9d9d9;
+  color: #7b7b7b;
+  border-color: #b5b5b5;
+  cursor: not-allowed;
+}
+
 .box:focus-visible {
   outline: 3px solid #2b66da;
   outline-offset: 2px;

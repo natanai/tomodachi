@@ -81,6 +81,8 @@ function buildGoals() {
 
 function render() {
   const goal = GOALS[parseInt(selectEl.value || '0', 10)];
+  sanitizeInvalidPicks(goal);
+
   const msPairs = buildPairs(goal.msBand[0], goal.msBand[1]);
   const eaPairs = buildPairs(goal.eaBand[0], goal.eaBand[1]);
 
@@ -119,13 +121,21 @@ function renderSliders(goal) {
       btn.textContent = i;
       btn.setAttribute('aria-label', `${label} ${i}`);
 
-      if (isAllowedForGoal(key, i, goal)) btn.classList.add('allowed');
+      const allowed = isAllowedForGoal(key, i, goal);
+      if (allowed) {
+        btn.classList.add('allowed');
+      } else {
+        btn.classList.add('disabled');
+        btn.disabled = true;
+      }
+
       if (picks[key] === i) {
         btn.classList.add('selected');
         btn.textContent = '✓';
       }
 
       btn.addEventListener('click', () => {
+        if (!allowed) return;
         picks[key] = picks[key] === i ? null : i;
         render();
       });
@@ -140,6 +150,21 @@ function renderSliders(goal) {
     row.append(trait, leftPole, boxes, rightPole);
     sliderGridEl.appendChild(row);
   });
+}
+
+
+function sanitizeInvalidPicks(goal) {
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const [key] of SLIDERS) {
+      if (picks[key] === null) continue;
+      if (!isAllowedForGoal(key, picks[key], goal)) {
+        picks[key] = null;
+        changed = true;
+      }
+    }
+  }
 }
 
 function isAllowedForGoal(key, value, goal) {
