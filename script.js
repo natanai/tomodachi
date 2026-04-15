@@ -9,17 +9,17 @@ const BAND_LABELS = ["0–3", "4–7", "8–11", "12–15"];
 
 // Uses old-game determination math (4x4 grid by sums), with latest-game wording.
 const PERSONALITY_GRID = [
-  ["Dreamer (Daydreamer)", "Hot-Blooded (Dynamo)", "Thinker", "Headstrong (Maverick)"],
-  ["Optimist (Cheerleader)", "Bubbly (Merrymaker)", "Introvert (Observer)", "Individualist (Rouge)"],
-  ["Carer (Buddy)", "Adventurer (Go-Getter)", "Perfectionist", "Leader (Visionary)"],
-  ["Softie (Sweetie)", "Charmer", "Patient (Strategist)", "Busy Bee (Achiever)"]
+  ["Dreamer", "Hot-Blooded", "Thinker", "Headstrong"],
+  ["Optimist", "Bubbly", "Introvert", "Individualist"],
+  ["Carer", "Adventurer", "Perfectionist", "Leader"],
+  ["Softie", "Charmer", "Patient", "Busy Bee"]
 ];
 
 const COLUMN_GROUPS = [
-  "Easy-going (Considerate)",
-  "Energetic (Outgoing)",
+  "Easy-going",
+  "Energetic",
   "Reserved",
-  "Confident (Ambitious)"
+  "Confident"
 ];
 
 const SLIDERS = [
@@ -52,11 +52,19 @@ const eaPairsEl = document.getElementById('eaPairs');
 
 const GOALS = buildGoals();
 
-GOALS.forEach((goal, index) => {
-  const option = document.createElement('option');
-  option.value = index;
-  option.textContent = `${goal.name} — ${goal.group}`;
-  selectEl.appendChild(option);
+const GOAL_GROUP_ORDER = ["Easy-going", "Energetic", "Reserved", "Confident"];
+GOAL_GROUP_ORDER.forEach((groupName) => {
+  const groupEl = document.createElement('optgroup');
+  groupEl.label = groupName;
+
+  GOALS.filter((goal) => goal.group === groupName).forEach((goal) => {
+    const option = document.createElement('option');
+    option.value = goal.id;
+    option.textContent = goal.name;
+    groupEl.appendChild(option);
+  });
+
+  selectEl.appendChild(groupEl);
 });
 
 selectEl.addEventListener('change', render);
@@ -67,6 +75,7 @@ function buildGoals() {
   for (let row = 0; row < PERSONALITY_GRID.length; row += 1) {
     for (let col = 0; col < PERSONALITY_GRID[row].length; col += 1) {
       goals.push({
+        id: goals.length,
         name: PERSONALITY_GRID[row][col],
         group: COLUMN_GROUPS[col],
         msBand: BANDS[col],
