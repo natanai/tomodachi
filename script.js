@@ -109,7 +109,7 @@ function render() {
   const msPairs = buildMappedPairs("movement", "speech", goal.msBand[0], goal.msBand[1]);
   const eaPairs = buildMappedPairs("energy", "attitude", goal.eaBand[0], goal.eaBand[1]);
 
-  goalBandsEl.textContent = `Goal uses old-game sum math: (Movement + Speech) in ${goal.msBandLabel}, and (Energy + Attitude) in ${goal.eaBandLabel}.`;
+  goalBandsEl.textContent = `Target ranges: Movement + Speech ${goal.msBandLabel}, Energy + Attitude ${goal.eaBandLabel}.`;
   msRangeEl.textContent = `${goal.msBand[0]} to ${goal.msBand[1]}`;
   eaRangeEl.textContent = `${goal.eaBand[0]} to ${goal.eaBand[1]}`;
   totalBuildsEl.textContent = `${msPairs.length * eaPairs.length * 8} combinations`;
@@ -226,7 +226,7 @@ function renderCurrentResult(goal) {
   eaSumEl.textContent = hasEa ? `${energyMapped + attitudeMapped}` : '—';
 
   if (!hasMs || !hasEa) {
-    currentResultEl.textContent = 'Not enough values selected yet.';
+    currentResultEl.textContent = 'Select Movement, Speech, Energy, and Attitude to see your result.';
     currentResultEl.className = '';
     return;
   }
@@ -266,5 +266,5 @@ function buildMappedPairs(firstKey, secondKey, minSum, maxSum) {
 }
 
 function pairLines(title, pairs) {
-  return `${title} valid pairs (${pairs.length}):\n${pairs.map(([a, b]) => `(${a}, ${b})`).join(', ')}`;
+  return `${title} pairs (${pairs.length}):\n${pairs.map(([a, b]) => `(${a}, ${b})`).join(', ')}`;
 }
