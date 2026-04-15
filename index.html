@@ -3,40 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tomodachi Life: Living the Dream — Personality Goal Tool</title>
+  <title>Tomodachi Life Mii Personality Planner</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app">
-    <h1>Tomodachi Life: Living the Dream</h1>
-    <p class="subtitle">Personality Goal Planner (Old Math + New Names)</p>
+    <h1>Tomodachi Life Mii Personality Planner</h1>
+    <p class="subtitle">Pick a personality, then build sliders that match it.</p>
 
     <section class="panel controls">
-      <label for="personalitySelect">Choose your target personality</label>
+      <label for="personalitySelect">Target personality</label>
       <select id="personalitySelect"></select>
       <p id="goalBands" class="description"></p>
-      <p class="hint">Click boxes to place your own check marks. Invalid values are grayed out and cannot be selected.</p>
+      <p class="hint">Click a number to select it. Grayed-out options can’t be used for this target.</p>
     </section>
 
     <section class="panel sliders-panel">
-      <h2>Build your sliders</h2>
+      <h2>Set your sliders</h2>
       <div id="sliderGrid" class="slider-grid"></div>
     </section>
 
     <section class="panel breakdown">
-      <h2>Result + valid ranges</h2>
-      <p><strong>Your current personality result:</strong> <span id="currentResult">Not enough values selected yet.</span></p>
+      <h2>Result</h2>
+      <p><strong>Current result:</strong> <span id="currentResult">Select Movement, Speech, Energy, and Attitude to see your result.</span></p>
       <p><strong>Movement + Speech sum:</strong> <span id="msSum">—</span></p>
       <p><strong>Energy + Attitude sum:</strong> <span id="eaSum">—</span></p>
-      <p><strong>Movement + Speech goal band:</strong> <span id="msRange"></span></p>
-      <p><strong>Energy + Attitude goal band:</strong> <span id="eaRange"></span></p>
-      <p><strong>Total possible full builds for this goal (including Overall):</strong> <span id="totalBuilds"></span></p>
+      <p><strong>Target Movement + Speech range:</strong> <span id="msRange"></span></p>
+      <p><strong>Target Energy + Attitude range:</strong> <span id="eaRange"></span></p>
+      <p><strong>Total valid builds (including Overall):</strong> <span id="totalBuilds"></span></p>
       <details>
-        <summary>See all Movement/Speech pairs for this goal</summary>
+        <summary>Show valid Movement/Speech pairs</summary>
         <pre id="msPairs"></pre>
       </details>
       <details>
-        <summary>See all Energy/Attitude pairs for this goal</summary>
+        <summary>Show valid Energy/Attitude pairs</summary>
         <pre id="eaPairs"></pre>
       </details>
     </section>
