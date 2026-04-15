@@ -7,15 +7,98 @@ const BANDS = [
 
 const BAND_LABELS = ["0–3", "4–7", "8–11", "12–15"];
 
-// Old-game 4x4 math coordinates with latest-game names.
+// Old-game 4x4 math coordinates with North American names.
 // Rows are Energy+Attitude bands from low (0-3) to high (12-15).
 // Columns are Movement+Speech bands from low (0-3) to high (12-15).
 const PERSONALITY_GRID = [
-  ["Introvert", "Thinker", "Individualist", "Headstrong"],
-  ["Patient", "Perfectionist", "Busy Bee", "Leader"],
-  ["Carer", "Dreamer", "Charmer", "Adventurer"],
-  ["Softie", "Optimist", "Bubbly", "Hot-Blooded"]
+  ["Observer", "Thinker", "Rogue", "Maverick"],
+  ["Strategist", "Perfectionist", "Achiever", "Visionary"],
+  ["Buddy", "Daydreamer", "Charmer", "Go-Getter"],
+  ["Sweetie", "Cheerleader", "Merrymaker", "Dynamo"]
 ];
+
+const PERSONALITY_DETAILS = {
+  Sweetie: {
+    inGameName: "Softie (Sweetie)",
+    description: "Sensitive, emotional, and in tune with the feelings of those around them. Empathetic and sentimental.",
+    color: "#f2cf62"
+  },
+  Charmer: {
+    inGameName: "Charmer",
+    description: "Radiant and always on form. Their effortless style is admired by all. Easily adapts to new situations.",
+    color: "#e68bb3"
+  },
+  Strategist: {
+    inGameName: "Patient (Strategist)",
+    description: "Unique, carefree and creative. Always thinks way outside the box, without worrying what others think.",
+    color: "#95c95e"
+  },
+  Achiever: {
+    inGameName: "Busy Bee (Achiever)",
+    description: "Diligent, productive, and highly efficient. An excellent planner who always follows through.",
+    color: "#2f93de"
+  },
+  Buddy: {
+    inGameName: "Carer (Buddy)",
+    description: "Trustworthy and considerate. Puts their friends first and works hard to make sure everyone gets along.",
+    color: "#d7c25e"
+  },
+  "Go-Getter": {
+    inGameName: "Adventurer (Go-Getter)",
+    description: "Bold and captivating. Their wit and charm lights up a room. It's never a dull moment when they're around!",
+    color: "#ec709c"
+  },
+  Cheerleader: {
+    inGameName: "Optimist (Cheerleader)",
+    description: "Positive, enthusiastic, and always smiling. Smiles not only for their own sake, but to help others smile too.",
+    color: "#efc457"
+  },
+  Merrymaker: {
+    inGameName: "Bubbly (Merrymaker)",
+    description: "Outgoing and pleasant to be around. Makes friends easily, and finds the silver lining to any bad situation.",
+    color: "#cd586f"
+  },
+  Daydreamer: {
+    inGameName: "Dreamer (Daydreamer)",
+    description: "Idealistic and romantic. Often has their head in the clouds, but finds a lot of great ideas up there.",
+    color: "#f0b669"
+  },
+  Dynamo: {
+    inGameName: "Hot-Blooded (Dynamo)",
+    description: "Assertive and highly regarded. Trusts their instincts, and easily commands the respect of others.",
+    color: "#ef873b"
+  },
+  Perfectionist: {
+    inGameName: "Perfectionist",
+    description: "Imaginative and inspired. Happiest when creating something. Finds beauty in even the smallest details.",
+    color: "#39c4af"
+  },
+  Visionary: {
+    inGameName: "Leader (Visionary)",
+    description: "Ambitious and takes risks. Full of energy and does things on a whim. A force to be reckoned with.",
+    color: "#2e7fd8"
+  },
+  Observer: {
+    inGameName: "Introvert (Observer)",
+    description: "Self-sufficient and highly individual. Doesn't let their emotions show, but has a lot going on deep down.",
+    color: "#56c6ca"
+  },
+  Thinker: {
+    inGameName: "Thinker",
+    description: "Thoughtful and introspective. Great at thinking things through and analysing from every angle.",
+    color: "#37b5ae"
+  },
+  Rogue: {
+    inGameName: "Individualist (Rogue)",
+    description: "Intelligent and not afraid to show it. Knowledgeable in a wide range of subjects. Speaks with confidence.",
+    color: "#5d78d7"
+  },
+  Maverick: {
+    inGameName: "Headstrong (Maverick)",
+    description: "A determined self-starter. Cuts their own path, letting nothing stand in their way. Quick to execute plans.",
+    color: "#8e77d6"
+  }
+};
 
 const SLIDERS = [
   ["movement", "Movement", "Slow", "Quick"],
@@ -78,14 +161,16 @@ function buildGoals() {
   const goals = [];
   for (let row = 0; row < PERSONALITY_GRID.length; row += 1) {
     for (let col = 0; col < PERSONALITY_GRID[row].length; col += 1) {
+      const name = PERSONALITY_GRID[row][col];
       goals.push({
         id: goals.length,
-        name: PERSONALITY_GRID[row][col],
+        name,
         group: getGroupName(row, col),
         msBand: BANDS[col],
         eaBand: BANDS[row],
         msBandLabel: BAND_LABELS[col],
-        eaBandLabel: BAND_LABELS[row]
+        eaBandLabel: BAND_LABELS[row],
+        detail: PERSONALITY_DETAILS[name]
       });
     }
   }
@@ -109,7 +194,13 @@ function render() {
   const msPairs = buildMappedPairs("movement", "speech", goal.msBand[0], goal.msBand[1]);
   const eaPairs = buildMappedPairs("energy", "attitude", goal.eaBand[0], goal.eaBand[1]);
 
-  goalBandsEl.textContent = `Target ranges: Movement + Speech ${goal.msBandLabel}, Energy + Attitude ${goal.eaBandLabel}.`;
+  goalBandsEl.innerHTML = `
+    <span class="personality-title" style="--personality-color: ${goal.detail.color};">${goal.name}</span>
+    <span class="personality-subtitle">${goal.detail.inGameName}</span>
+    <span>${goal.detail.description}</span>
+    <span class="personality-range">Target ranges: Movement + Speech ${goal.msBandLabel}, Energy + Attitude ${goal.eaBandLabel}.</span>
+  `;
+
   msRangeEl.textContent = `${goal.msBand[0]} to ${goal.msBand[1]}`;
   eaRangeEl.textContent = `${goal.eaBand[0]} to ${goal.eaBand[1]}`;
   totalBuildsEl.textContent = `${msPairs.length * eaPairs.length * 8} combinations`;
