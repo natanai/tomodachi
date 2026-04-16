@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Tomodachi Life personality planner preview</title>
+  <desc id="desc">Nintendo-inspired social preview with minimal text and slider-focused visuals.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffdf5"/>
+      <stop offset="100%" stop-color="#f6f3e9"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 62px 'Trebuchet MS', 'Arial Rounded MT Bold', sans-serif; fill: #222; }
+      .sub { font: 700 30px 'Trebuchet MS', 'Arial Rounded MT Bold', sans-serif; fill: #5a3900; }
+      .chip { font: 700 24px 'Trebuchet MS', 'Arial Rounded MT Bold', sans-serif; fill: #2f2f2f; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <rect x="60" y="42" width="1080" height="138" rx="30" fill="#ffe27a" stroke="#d5a52b" stroke-width="6"/>
+  <rect x="84" y="73" width="240" height="75" rx="36" fill="#e60012"/>
+  <circle cx="120" cy="110" r="17" fill="#fff"/>
+  <circle cx="290" cy="110" r="17" fill="#fff"/>
+  <text x="348" y="102" class="sub">Tomodachi Life</text>
+  <text x="348" y="156" class="title">Mii Personality Planner</text>
+
+  <rect x="70" y="212" width="700" height="348" rx="26" fill="#fff" stroke="#ddb53e" stroke-width="5"/>
+  <rect x="102" y="248" width="188" height="44" rx="18" fill="#2f93de"/>
+  <text x="129" y="278" class="chip" fill="#fff">Pick</text>
+  <rect x="320" y="248" width="188" height="44" rx="18" fill="#66c59b"/>
+  <text x="354" y="278" class="chip">Match</text>
+  <rect x="538" y="248" width="188" height="44" rx="18" fill="#f07d12"/>
+  <text x="583" y="278" class="chip" fill="#fff">Result</text>
+
+  <g transform="translate(104,324)">
+    <rect x="0" y="0" width="14" height="14" rx="3" fill="#2f93de"/>
+    <rect x="0" y="74" width="14" height="14" rx="3" fill="#66c59b"/>
+    <rect x="0" y="148" width="14" height="14" rx="3" fill="#f07d12"/>
+
+    <rect x="36" y="-8" width="620" height="26" rx="13" fill="#e6f1ff"/>
+    <rect x="36" y="66" width="620" height="26" rx="13" fill="#e4f6ed"/>
+    <rect x="36" y="140" width="620" height="26" rx="13" fill="#ffe9d8"/>
+
+    <circle cx="168" cy="5" r="15" fill="#2f93de"/>
+    <circle cx="420" cy="79" r="15" fill="#66c59b"/>
+    <circle cx="562" cy="153" r="15" fill="#f07d12"/>
+  </g>
+
+  <rect x="790" y="212" width="340" height="348" rx="26" fill="#fff8d5" stroke="#ddb53e" stroke-width="5"/>
+
+  <g transform="translate(818,250)">
+    <rect x="0" y="0" width="70" height="22" rx="8" fill="#e6edf7"/>
+    <g transform="translate(86,2)">
+      <rect x="0" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="22" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="44" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="66" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="88" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="110" y="0" width="18" height="18" rx="4" fill="#f07d12"/><rect x="132" y="0" width="18" height="18" rx="4" fill="#e8c8ab"/><rect x="154" y="0" width="18" height="18" rx="4" fill="#e8c8ab"/>
+    </g>
+
+    <rect x="0" y="70" width="70" height="22" rx="8" fill="#e6edf7"/>
+    <g transform="translate(86,72)">
+      <rect x="0" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="22" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="44" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="66" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="88" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="110" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="132" y="0" width="18" height="18" rx="4" fill="#f07d12"/><rect x="154" y="0" width="18" height="18" rx="4" fill="#e8c8ab"/>
+    </g>
+
+    <rect x="0" y="140" width="70" height="22" rx="8" fill="#e6edf7"/>
+    <g transform="translate(86,142)">
+      <rect x="0" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="22" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="44" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="66" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="88" y="0" width="18" height="18" rx="4" fill="#f07d12"/><rect x="110" y="0" width="18" height="18" rx="4" fill="#e8c8ab"/><rect x="132" y="0" width="18" height="18" rx="4" fill="#e8c8ab"/><rect x="154" y="0" width="18" height="18" rx="4" fill="#e8c8ab"/>
+    </g>
+
+    <rect x="0" y="210" width="70" height="22" rx="8" fill="#e6edf7"/>
+    <g transform="translate(86,212)">
+      <rect x="0" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="22" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="44" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="66" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="88" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="110" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="132" y="0" width="18" height="18" rx="4" fill="#66c59b"/><rect x="154" y="0" width="18" height="18" rx="4" fill="#f07d12"/>
+    </g>
+  </g>
+</svg>
