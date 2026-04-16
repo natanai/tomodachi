@@ -8,35 +8,38 @@
 </head>
 <body>
   <main class="app">
-    <h1>Tomodachi Life Mii Personality Planner</h1>
-    <p class="subtitle">Pick a personality, then build sliders that match it.</p>
+    <h1 id="pageTitle">Tomodachi Life Mii Personality Planner</h1>
+    <p id="pageSubtitle" class="subtitle">Pick a personality, then build sliders that match it.</p>
 
     <section class="panel controls">
-      <label for="personalitySelect">Target personality</label>
+      <label id="regionLabel" for="regionSelect">Region</label>
+      <select id="regionSelect"></select>
+
+      <label id="personalityLabel" for="personalitySelect">Target personality</label>
       <select id="personalitySelect"></select>
       <p id="goalBands" class="description"></p>
-      <p class="hint">Click a number to select it. Grayed-out options can’t be used for this target.</p>
+      <p id="hintText" class="hint">Click a number to select it. Grayed-out options can’t be used for this target.</p>
     </section>
 
     <section class="panel sliders-panel">
-      <h2>Set your sliders</h2>
+      <h2 id="slidersHeading">Set your sliders</h2>
       <div id="sliderGrid" class="slider-grid"></div>
     </section>
 
     <section class="panel breakdown">
-      <h2>Result</h2>
-      <p><strong>Current result:</strong> <span id="currentResult">Select Movement, Speech, Energy, and Attitude to see your result.</span></p>
-      <p><strong>Movement + Speech sum:</strong> <span id="msSum">—</span></p>
-      <p><strong>Energy + Attitude sum:</strong> <span id="eaSum">—</span></p>
-      <p><strong>Target Movement + Speech range:</strong> <span id="msRange"></span></p>
-      <p><strong>Target Energy + Attitude range:</strong> <span id="eaRange"></span></p>
-      <p><strong>Total valid builds (including Overall):</strong> <span id="totalBuilds"></span></p>
+      <h2 id="resultHeading">Result</h2>
+      <p><strong id="currentResultLabel">Current result:</strong> <span id="currentResult">Select Movement, Speech, Energy, and Attitude to see your result.</span></p>
+      <p><strong id="msSumLabel">Movement + Speech sum:</strong> <span id="msSum">—</span></p>
+      <p><strong id="eaSumLabel">Energy + Attitude sum:</strong> <span id="eaSum">—</span></p>
+      <p><strong id="msRangeLabel">Target Movement + Speech range:</strong> <span id="msRange"></span></p>
+      <p><strong id="eaRangeLabel">Target Energy + Attitude range:</strong> <span id="eaRange"></span></p>
+      <p><strong id="totalBuildsLabel">Total valid builds (including Overall):</strong> <span id="totalBuilds"></span></p>
       <details>
-        <summary>Show valid Movement/Speech pairs</summary>
+        <summary id="msPairsSummary">Show valid Movement/Speech pairs</summary>
         <pre id="msPairs"></pre>
       </details>
       <details>
-        <summary>Show valid Energy/Attitude pairs</summary>
+        <summary id="eaPairsSummary">Show valid Energy/Attitude pairs</summary>
         <pre id="eaPairs"></pre>
       </details>
     </section>
