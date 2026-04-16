@@ -1,18 +1,20 @@
 :root {
-  --color-background: #f5f8fe;
+  --color-background: #fff9dd;
   --color-surface: #ffffff;
-  --color-surface-muted: #edf4ff;
-  --color-primary: #56c6ca;
-  --color-primary-deep: #2aa7ac;
-  --color-accent: #7e8df5;
-  --color-text: #16314d;
-  --color-muted: #64819c;
-  --color-border: #d4e2f2;
+  --color-surface-muted: #fffef3;
+  --color-primary: #06acde;
+  --color-primary-deep: #067fa6;
+  --color-accent: #db281c;
+  --color-text: #1f2430;
+  --color-muted: #545f73;
+  --color-border: #ffd95c;
+  --color-danger: #fe0000;
+  --color-highlight: #ffec02;
   --color-success: #229b5b;
   --color-warning: #b16d00;
   --radius-lg: 18px;
   --radius-md: 12px;
-  --shadow-sm: 0 6px 16px rgba(19, 45, 75, 0.08);
+  --shadow-sm: 0 8px 0 rgba(6, 127, 166, 0.18);
 }
 
 * {
@@ -22,7 +24,12 @@
 body {
   margin: 0;
   font-family: "Nunito", "Segoe UI", sans-serif;
-  background: linear-gradient(180deg, #eff6ff 0%, var(--color-background) 220px);
+  background:
+    repeating-linear-gradient(
+      180deg,
+      #fffef6 0 34px,
+      var(--color-background) 34px 68px
+    );
   color: var(--color-text);
 }
 
@@ -37,7 +44,7 @@ body {
 .card {
   background: var(--color-surface);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
+  border: 3px solid var(--color-border);
   box-shadow: var(--shadow-sm);
 }
 
@@ -45,18 +52,36 @@ body {
   padding: 20px;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(140deg, #ffffff 0%, #edf9ff 100%);
+  background: linear-gradient(140deg, #ffffff 0%, #f0fbff 100%);
+  border-color: var(--color-primary);
+}
+
+.app-header::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 10px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #db281c 0 33%,
+    #ffec02 33% 66%,
+    #06acde 66% 100%
+  );
 }
 
 h1 {
   margin: 0;
   font-size: clamp(1.35rem, 2.8vw, 1.9rem);
   line-height: 1.2;
-  color: var(--color-primary-deep);
+  color: var(--color-accent);
+  text-shadow: 0 1px 0 #ffffff;
 }
 
 .subtitle {
-  margin: 10px 0 0;
+  margin: 10px 0 8px;
   color: var(--color-muted);
   font-size: 1rem;
 }
@@ -68,6 +93,7 @@ h1 {
 h2 {
   margin: 0 0 12px;
   font-size: 1.2rem;
+  color: var(--color-primary-deep);
 }
 
 .controls {
@@ -90,7 +116,7 @@ select {
   font-size: 1rem;
   padding: 11px 12px;
   border-radius: var(--radius-md);
-  border: 1px solid #bad0e6;
+  border: 2px solid #06acde;
   background: #fff;
   color: var(--color-text);
 }
@@ -99,7 +125,7 @@ select:focus-visible,
 .nav-item:focus-visible,
 .box:focus-visible,
 summary:focus-visible {
-  outline: 3px solid #8eb8ff;
+  outline: 3px solid var(--color-danger);
   outline-offset: 2px;
 }
 
@@ -115,7 +141,7 @@ summary:focus-visible {
   padding: 4px 10px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--personality-color) 24%, white 76%);
-  border: 1px solid color-mix(in srgb, var(--personality-color) 50%, white 50%);
+  border: 2px solid color-mix(in srgb, var(--personality-color) 72%, white 28%);
   font-weight: 700;
 }
 
@@ -172,8 +198,8 @@ summary:focus-visible {
   min-height: 34px;
   aspect-ratio: 1 / 1;
   border-radius: 10px;
-  border: 1px solid #bdd3e7;
-  background: #eef5ff;
+  border: 2px solid #a9d8e8;
+  background: #f4fcff;
   color: #395472;
   display: grid;
   place-items: center;
@@ -188,15 +214,15 @@ summary:focus-visible {
 }
 
 .box.allowed {
-  background: #e3f8f4;
-  border-color: #89d6cb;
-  color: #0f6d74;
+  background: #dcf5ff;
+  border-color: #06acde;
+  color: #075f7b;
 }
 
 .box.selected {
-  background: var(--color-primary);
+  background: var(--color-accent);
   color: white;
-  border-color: var(--color-primary-deep);
+  border-color: #7f1913;
 }
 
 .box.disabled,
@@ -220,7 +246,7 @@ summary:focus-visible {
 summary {
   cursor: pointer;
   font-weight: 700;
-  color: #395b7e;
+  color: var(--color-accent);
 }
 
 pre {
@@ -236,9 +262,9 @@ pre {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(6px);
-  border-top: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-primary);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -261,12 +287,12 @@ pre {
 }
 
 .nav-item:hover {
-  background: #eef4ff;
+  background: #fff3ab;
 }
 
 .nav-item.active {
-  color: var(--color-primary-deep);
-  background: #dff5f7;
+  color: var(--color-danger);
+  background: var(--color-highlight);
 }
 
 @media (min-width: 920px) {
