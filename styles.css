@@ -33,6 +33,7 @@ h1 { margin-bottom: 4px; text-align: center; }
 }
 
 .controls label { font-weight: 700; display: block; margin-bottom: 8px; }
+#personalityLabel { margin-top: 12px; }
 select {
   width: 100%;
   max-width: 460px;
