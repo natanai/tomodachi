@@ -5,13 +5,13 @@ const BANDS = [
   [12, 15]
 ];
 
-const BAND_LABELS = ["0–3", "4–7", "8–11", "12–15"];
+const BAND_LABELS = ['0–3', '4–7', '8–11', '12–15'];
 
 const PERSONALITY_GRID = [
-  ["observer", "thinker", "rogue", "maverick"],
-  ["strategist", "perfectionist", "achiever", "visionary"],
-  ["buddy", "daydreamer", "charmer", "goGetter"],
-  ["sweetie", "cheerleader", "merrymaker", "dynamo"]
+  ['observer', 'thinker', 'rogue', 'maverick'],
+  ['strategist', 'perfectionist', 'achiever', 'visionary'],
+  ['buddy', 'daydreamer', 'charmer', 'goGetter'],
+  ['sweetie', 'cheerleader', 'merrymaker', 'dynamo']
 ];
 
 const SLIDER_MAPPED_VALUES = {
@@ -22,67 +22,161 @@ const SLIDER_MAPPED_VALUES = {
   overall: [0, 1, 2, 3, 4, 5, 6, 7]
 };
 
+const BASE_EN_UI = {
+  pageTitle: 'Tomodachi Life Mii Personality Planner',
+  pageSubtitle: 'Pick a personality, then build sliders that match it.',
+  regionLabel: 'Region',
+  personalityLabel: 'Target personality',
+  hintText: 'Click a number to select it. Grayed-out options can’t be used for this target.',
+  slidersHeading: 'Set your sliders',
+  resultHeading: 'Result',
+  currentResultLabel: 'Current result:',
+  currentResultEmpty: 'Select Movement, Speech, Energy, and Attitude to see your result.',
+  msSumLabel: 'Movement + Speech sum:',
+  eaSumLabel: 'Energy + Attitude sum:',
+  msRangeLabel: 'Target Movement + Speech range:',
+  eaRangeLabel: 'Target Energy + Attitude range:',
+  totalBuildsLabel: 'Total valid builds (including Overall):',
+  msPairsSummary: 'Show valid Movement/Speech pairs',
+  eaPairsSummary: 'Show valid Energy/Attitude pairs',
+  rangeText: 'Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}.',
+  combinationsText: '{count} combinations',
+  pairTitleMs: 'Movement + Speech',
+  pairTitleEa: 'Energy + Attitude',
+  pairText: '{title} pairs ({count}):',
+  resultText: '{name} — {group}{matchSuffix}',
+  resultMatchSuffix: ' (matches target)'
+};
+
+const BASE_EN_GROUPS = {
+  easygoing: 'Easy-going',
+  energetic: 'Energetic',
+  reserved: 'Reserved',
+  confident: 'Confident'
+};
+
+const BASE_EN_SLIDERS = {
+  movement: ['Movement', 'Slow', 'Quick'],
+  speech: ['Speech', 'Polite', 'Direct'],
+  energy: ['Energy', 'Flat', 'Intense'],
+  attitude: ['Attitude', 'Serious', 'Relaxed'],
+  overall: ['Overall', 'Normal', 'Quirky']
+};
+
+const BASE_PERSONALITIES = {
+  sweetie: { name: 'Sweetie', inGameName: 'Softie (Sweetie)', description: 'Sensitive, emotional, and in tune with the feelings of those around them. Empathetic and sentimental.', color: '#f2cf62' },
+  charmer: { name: 'Charmer', inGameName: 'Charmer', description: 'Radiant and always on form. Their effortless style is admired by all. Easily adapts to new situations.', color: '#e68bb3' },
+  strategist: { name: 'Strategist', inGameName: 'Patient (Strategist)', description: 'Unique, carefree and creative. Always thinks way outside the box, without worrying what others think.', color: '#95c95e' },
+  achiever: { name: 'Achiever', inGameName: 'Busy Bee (Achiever)', description: 'Diligent, productive, and highly efficient. An excellent planner who always follows through.', color: '#2f93de' },
+  buddy: { name: 'Buddy', inGameName: 'Carer (Buddy)', description: 'Trustworthy and considerate. Puts their friends first and works hard to make sure everyone gets along.', color: '#d7c25e' },
+  goGetter: { name: 'Go-Getter', inGameName: 'Adventurer (Go-Getter)', description: 'Bold and captivating. Their wit and charm lights up a room. It\'s never a dull moment when they\'re around!', color: '#ec709c' },
+  cheerleader: { name: 'Cheerleader', inGameName: 'Optimist (Cheerleader)', description: 'Positive, enthusiastic, and always smiling. Smiles not only for their own sake, but to help others smile too.', color: '#efc457' },
+  merrymaker: { name: 'Merrymaker', inGameName: 'Bubbly (Merrymaker)', description: 'Outgoing and pleasant to be around. Makes friends easily, and finds the silver lining to any bad situation.', color: '#cd586f' },
+  daydreamer: { name: 'Daydreamer', inGameName: 'Dreamer (Daydreamer)', description: 'Idealistic and romantic. Often has their head in the clouds, but finds a lot of great ideas up there.', color: '#f0b669' },
+  dynamo: { name: 'Dynamo', inGameName: 'Hot-Blooded (Dynamo)', description: 'Assertive and highly regarded. Trusts their instincts, and easily commands the respect of others.', color: '#ef873b' },
+  perfectionist: { name: 'Perfectionist', inGameName: 'Perfectionist', description: 'Imaginative and inspired. Happiest when creating something. Finds beauty in even the smallest details.', color: '#39c4af' },
+  visionary: { name: 'Visionary', inGameName: 'Leader (Visionary)', description: 'Ambitious and takes risks. Full of energy and does things on a whim. A force to be reckoned with.', color: '#2e7fd8' },
+  observer: { name: 'Observer', inGameName: 'Introvert (Observer)', description: 'Self-sufficient and highly individual. Doesn\'t let their emotions show, but has a lot going on deep down.', color: '#56c6ca' },
+  thinker: { name: 'Thinker', inGameName: 'Thinker', description: 'Thoughtful and introspective. Great at thinking things through and analysing from every angle.', color: '#37b5ae' },
+  rogue: { name: 'Rogue', inGameName: 'Individualist (Rogue)', description: 'Intelligent and not afraid to show it. Knowledgeable in a wide range of subjects. Speaks with confidence.', color: '#5d78d7' },
+  maverick: { name: 'Maverick', inGameName: 'Headstrong (Maverick)', description: 'A determined self-starter. Cuts their own path, letting nothing stand in their way. Quick to execute plans.', color: '#8e77d6' }
+};
+
+function deepMerge(base, override) {
+  const output = Array.isArray(base) ? [...base] : { ...base };
+  for (const [key, value] of Object.entries(override || {})) {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      output[key] = deepMerge(base[key] || {}, value);
+    } else {
+      output[key] = value;
+    }
+  }
+  return output;
+}
+
+function createEnglishRegion(code, regionLabel, overrides = {}) {
+  return {
+    code,
+    lang: overrides.lang || 'en',
+    regionLabel,
+    ui: deepMerge(BASE_EN_UI, overrides.ui || {}),
+    groups: deepMerge(BASE_EN_GROUPS, overrides.groups || {}),
+    sliderLabels: deepMerge(BASE_EN_SLIDERS, overrides.sliderLabels || {}),
+    personalities: deepMerge(BASE_PERSONALITIES, overrides.personalities || {})
+  };
+}
+
 const REGIONS = {
-  northAmerica: {
-    code: 'northAmerica',
-    lang: 'en',
-    regionLabel: 'North America',
+  northAmerica: createEnglishRegion('northAmerica', 'North America'),
+  europeEnglish: createEnglishRegion('europeEnglish', 'Europe (English)', {
+    personalities: {
+      sweetie: { name: 'Softie', inGameName: 'Softie' },
+      strategist: { name: 'Free Spirit', inGameName: 'Free Spirit' },
+      achiever: { name: 'Busy Bee', inGameName: 'Busy Bee' },
+      buddy: { name: 'Carer', inGameName: 'Carer' },
+      goGetter: { name: 'Adventurer', inGameName: 'Adventurer' },
+      cheerleader: { name: 'Optimist', inGameName: 'Optimist' },
+      merrymaker: { name: 'Bubbly', inGameName: 'Bubbly' },
+      daydreamer: { name: 'Dreamer', inGameName: 'Dreamer' },
+      dynamo: { name: 'Hot-Blooded', inGameName: 'Hot-Blooded' },
+      visionary: { name: 'Leader', inGameName: 'Leader' },
+      observer: { name: 'Introvert', inGameName: 'Introvert' },
+      rogue: { name: 'Individualist', inGameName: 'Individualist' },
+      maverick: { name: 'Headstrong', inGameName: 'Headstrong' }
+    }
+  }),
+  europeFrench: createEnglishRegion('europeFrench', 'Europe (Français)', {
+    lang: 'fr',
     ui: {
-      pageTitle: 'Tomodachi Life Mii Personality Planner',
-      pageSubtitle: 'Pick a personality, then build sliders that match it.',
-      regionLabel: 'Region',
-      personalityLabel: 'Target personality',
-      hintText: 'Click a number to select it. Grayed-out options can’t be used for this target.',
-      slidersHeading: 'Set your sliders',
-      resultHeading: 'Result',
-      currentResultLabel: 'Current result:',
-      currentResultEmpty: 'Select Movement, Speech, Energy, and Attitude to see your result.',
-      msSumLabel: 'Movement + Speech sum:',
-      eaSumLabel: 'Energy + Attitude sum:',
-      msRangeLabel: 'Target Movement + Speech range:',
-      eaRangeLabel: 'Target Energy + Attitude range:',
-      totalBuildsLabel: 'Total valid builds (including Overall):',
-      msPairsSummary: 'Show valid Movement/Speech pairs',
-      eaPairsSummary: 'Show valid Energy/Attitude pairs',
-      rangeText: 'Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}.',
-      combinationsText: '{count} combinations',
-      pairTitleMs: 'Movement + Speech',
-      pairTitleEa: 'Energy + Attitude',
-      resultText: '{name} — {group}{matchSuffix}',
-      resultMatchSuffix: ' (matches target)'
-    },
-    groups: {
-      easygoing: 'Easy-going',
-      energetic: 'Energetic',
-      reserved: 'Reserved',
-      confident: 'Confident'
-    },
-    sliderLabels: {
-      movement: ['Movement', 'Slow', 'Quick'],
-      speech: ['Speech', 'Polite', 'Direct'],
-      energy: ['Energy', 'Flat', 'Intense'],
-      attitude: ['Attitude', 'Serious', 'Relaxed'],
-      overall: ['Overall', 'Normal', 'Quirky']
+      pageSubtitle: 'Choisis une personnalité, puis ajuste les curseurs correspondants.',
+      regionLabel: 'Région',
+      personalityLabel: 'Personnalité cible',
+      slidersHeading: 'Réglez vos curseurs',
+      resultHeading: 'Résultat',
+      currentResultLabel: 'Résultat actuel :',
+      currentResultEmpty: 'Choisissez Mouvement, Parole, Énergie et Attitude pour voir le résultat.',
+      combinationsText: '{count} combinaisons',
+      pairText: 'Paires {title} ({count}) :',
+      resultMatchSuffix: ' (correspond à la cible)'
     },
     personalities: {
-      sweetie: { name: 'Sweetie', inGameName: 'Softie (Sweetie)', description: 'Sensitive, emotional, and in tune with the feelings of those around them. Empathetic and sentimental.', color: '#f2cf62' },
-      charmer: { name: 'Charmer', inGameName: 'Charmer', description: 'Radiant and always on form. Their effortless style is admired by all. Easily adapts to new situations.', color: '#e68bb3' },
-      strategist: { name: 'Strategist', inGameName: 'Patient (Strategist)', description: 'Unique, carefree and creative. Always thinks way outside the box, without worrying what others think.', color: '#95c95e' },
-      achiever: { name: 'Achiever', inGameName: 'Busy Bee (Achiever)', description: 'Diligent, productive, and highly efficient. An excellent planner who always follows through.', color: '#2f93de' },
-      buddy: { name: 'Buddy', inGameName: 'Carer (Buddy)', description: 'Trustworthy and considerate. Puts their friends first and works hard to make sure everyone gets along.', color: '#d7c25e' },
-      goGetter: { name: 'Go-Getter', inGameName: 'Adventurer (Go-Getter)', description: 'Bold and captivating. Their wit and charm lights up a room. It\'s never a dull moment when they\'re around!', color: '#ec709c' },
-      cheerleader: { name: 'Cheerleader', inGameName: 'Optimist (Cheerleader)', description: 'Positive, enthusiastic, and always smiling. Smiles not only for their own sake, but to help others smile too.', color: '#efc457' },
-      merrymaker: { name: 'Merrymaker', inGameName: 'Bubbly (Merrymaker)', description: 'Outgoing and pleasant to be around. Makes friends easily, and finds the silver lining to any bad situation.', color: '#cd586f' },
-      daydreamer: { name: 'Daydreamer', inGameName: 'Dreamer (Daydreamer)', description: 'Idealistic and romantic. Often has their head in the clouds, but finds a lot of great ideas up there.', color: '#f0b669' },
-      dynamo: { name: 'Dynamo', inGameName: 'Hot-Blooded (Dynamo)', description: 'Assertive and highly regarded. Trusts their instincts, and easily commands the respect of others.', color: '#ef873b' },
-      perfectionist: { name: 'Perfectionist', inGameName: 'Perfectionist', description: 'Imaginative and inspired. Happiest when creating something. Finds beauty in even the smallest details.', color: '#39c4af' },
-      visionary: { name: 'Visionary', inGameName: 'Leader (Visionary)', description: 'Ambitious and takes risks. Full of energy and does things on a whim. A force to be reckoned with.', color: '#2e7fd8' },
-      observer: { name: 'Observer', inGameName: 'Introvert (Observer)', description: 'Self-sufficient and highly individual. Doesn\'t let their emotions show, but has a lot going on deep down.', color: '#56c6ca' },
-      thinker: { name: 'Thinker', inGameName: 'Thinker', description: 'Thoughtful and introspective. Great at thinking things through and analysing from every angle.', color: '#37b5ae' },
-      rogue: { name: 'Rogue', inGameName: 'Individualist (Rogue)', description: 'Intelligent and not afraid to show it. Knowledgeable in a wide range of subjects. Speaks with confidence.', color: '#5d78d7' },
-      maverick: { name: 'Maverick', inGameName: 'Headstrong (Maverick)', description: 'A determined self-starter. Cuts their own path, letting nothing stand in their way. Quick to execute plans.', color: '#8e77d6' }
+      sweetie: { name: 'Doux', inGameName: 'Doux' },
+      charmer: { name: 'Charmeur', inGameName: 'Charmeur' },
+      strategist: { name: 'Stratège', inGameName: 'Stratège' },
+      achiever: { name: 'Bosseur', inGameName: 'Bosseur' },
+      daydreamer: { name: 'Rêveur', inGameName: 'Rêveur' },
+      visionary: { name: 'Leader', inGameName: 'Leader' }
     }
-  },
+  }),
+  europeGerman: createEnglishRegion('europeGerman', 'Europe (Deutsch)', {
+    lang: 'de',
+    ui: {
+      pageSubtitle: 'Wähle eine Persönlichkeit und stelle passende Regler ein.',
+      regionLabel: 'Region',
+      personalityLabel: 'Ziel-Persönlichkeit',
+      slidersHeading: 'Regler einstellen',
+      resultHeading: 'Ergebnis',
+      currentResultLabel: 'Aktuelles Ergebnis:',
+      currentResultEmpty: 'Wähle Bewegung, Sprechweise, Energie und Haltung für ein Ergebnis.',
+      combinationsText: '{count} Kombinationen',
+      pairText: '{title}-Paare ({count}):',
+      resultMatchSuffix: ' (passt zum Ziel)'
+    },
+    personalities: {
+      sweetie: { name: 'Sanft', inGameName: 'Sanft' },
+      observer: { name: 'Beobachter', inGameName: 'Beobachter' },
+      thinker: { name: 'Denker', inGameName: 'Denker' },
+      achiever: { name: 'Macher', inGameName: 'Macher' },
+      dynamo: { name: 'Energiebündel', inGameName: 'Energiebündel' }
+    }
+  }),
+  australia: createEnglishRegion('australia', 'Australia / New Zealand', {
+    personalities: {
+      goGetter: { name: 'Trailblazer', inGameName: 'Adventurer (Trailblazer)' },
+      maverick: { name: 'Firebrand', inGameName: 'Headstrong (Firebrand)' },
+      cheerleader: { name: 'Upbeat', inGameName: 'Optimist (Upbeat)' }
+    }
+  }),
   japan: {
     code: 'japan',
     lang: 'ja',
@@ -108,6 +202,7 @@ const REGIONS = {
       combinationsText: '{count} 通り',
       pairTitleMs: '動き + 話し方',
       pairTitleEa: '感情 + 考え方',
+      pairText: '{title}の組み合わせ（{count}）:',
       resultText: '{name} — {group}{matchSuffix}',
       resultMatchSuffix: '（目標と一致）'
     },
@@ -142,6 +237,43 @@ const REGIONS = {
       rogue: { name: 'マイペース', inGameName: 'マイペース', description: '知識が豊富で自分の考えをはっきり伝えられます。', color: '#5d78d7' },
       maverick: { name: 'どんどん', inGameName: 'どんどん', description: '決断が早く、迷わず自分の道を切り開くタイプ。', color: '#8e77d6' }
     }
+  },
+  southKorea: {
+    code: 'southKorea',
+    lang: 'ko',
+    regionLabel: '대한민국',
+    ui: {
+      ...BASE_EN_UI,
+      pageTitle: '미 톰오다치 라이프 성격 플래너',
+      pageSubtitle: '성격을 고른 뒤 슬라이더를 맞춰 보세요.',
+      regionLabel: '지역',
+      personalityLabel: '목표 성격',
+      slidersHeading: '슬라이더 설정',
+      resultHeading: '결과',
+      currentResultLabel: '현재 결과:',
+      combinationsText: '{count}개 조합',
+      pairText: '{title} 조합 ({count}):',
+      resultMatchSuffix: ' (목표와 일치)'
+    },
+    groups: {
+      easygoing: '느긋함',
+      energetic: '활발함',
+      reserved: '신중함',
+      confident: '자신감'
+    },
+    sliderLabels: {
+      movement: ['움직임', '느림', '빠름'],
+      speech: ['말투', '공손', '직설'],
+      energy: ['에너지', '차분', '강함'],
+      attitude: ['태도', '진지', '느긋'],
+      overall: ['전체', '보통', '개성']
+    },
+    personalities: deepMerge(BASE_PERSONALITIES, {
+      sweetie: { name: '다정형', inGameName: '다정형' },
+      observer: { name: '관찰형', inGameName: '관찰형' },
+      achiever: { name: '성취형', inGameName: '성취형' },
+      visionary: { name: '리더형', inGameName: '리더형' }
+    })
   }
 };
 
@@ -460,7 +592,7 @@ function buildMappedPairs(firstKey, secondKey, minSum, maxSum) {
 }
 
 function pairLines(title, pairs) {
-  return `${title} pairs (${pairs.length}):\n${pairs.map(([a, b]) => `(${a}, ${b})`).join(', ')}`;
+  return `${format(currentRegion.ui.pairText, { title, count: pairs.length })}\n${pairs.map(([a, b]) => `(${a}, ${b})`).join(', ')}`;
 }
 
 function format(template, values) {
