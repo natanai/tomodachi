@@ -74,7 +74,14 @@ select {
 
 .slider-row {
   display: grid;
-  grid-template-columns: 110px 50px 1fr 50px;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.slider-scale {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 56px;
   gap: 8px;
   align-items: center;
 }
@@ -84,11 +91,13 @@ select {
 
 .boxes {
   display: grid;
-  grid-template-columns: repeat(8, minmax(24px, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 6px;
 }
 
 .box {
+  width: 100%;
+  min-height: 32px;
   aspect-ratio: 1 / 1;
   border-radius: 6px;
   border: 2px solid #e8c8ab;
@@ -132,4 +141,43 @@ pre {
   background: #fff;
   border: 1px solid #ddd;
   padding: 10px;
+}
+
+@media (max-width: 720px) {
+  .app {
+    padding: 16px 10px 32px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    line-height: 1.25;
+  }
+
+  .panel {
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  .slider-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .slider-scale {
+    grid-template-columns: 46px minmax(0, 1fr) 46px;
+    gap: 6px;
+  }
+
+  .pole {
+    font-size: 0.85rem;
+  }
+
+  .boxes {
+    gap: 4px;
+  }
+
+  .box {
+    min-height: 30px;
+    font-size: 0.85rem;
+  }
 }

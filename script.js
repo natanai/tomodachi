@@ -261,7 +261,11 @@ function renderSliders(goal) {
     rightPole.className = 'pole';
     rightPole.textContent = right;
 
-    row.append(trait, leftPole, boxes, rightPole);
+    const scale = document.createElement('div');
+    scale.className = 'slider-scale';
+    scale.append(leftPole, boxes, rightPole);
+
+    row.append(trait, scale);
     sliderGridEl.appendChild(row);
   });
 }
