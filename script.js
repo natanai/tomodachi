@@ -297,11 +297,6 @@ const sliderGridEl = document.getElementById('sliderGrid');
 const currentResultEl = document.getElementById('currentResult');
 const msSumEl = document.getElementById('msSum');
 const eaSumEl = document.getElementById('eaSum');
-const msRangeEl = document.getElementById('msRange');
-const eaRangeEl = document.getElementById('eaRange');
-const totalBuildsEl = document.getElementById('totalBuilds');
-const msPairsEl = document.getElementById('msPairs');
-const eaPairsEl = document.getElementById('eaPairs');
 
 function initialize() {
   renderRegionOptions();
@@ -339,20 +334,14 @@ function renderStaticText() {
   const { ui } = currentRegion;
 
   document.getElementById('pageTitle').textContent = ui.pageTitle;
-  document.getElementById('pageSubtitle').textContent = ui.pageSubtitle;
   document.getElementById('regionLabel').textContent = ui.regionLabel;
   document.getElementById('personalityLabel').textContent = ui.personalityLabel;
-  document.getElementById('hintText').textContent = ui.hintText;
-  document.getElementById('slidersHeading').textContent = ui.slidersHeading;
+  document.getElementById('hintText').textContent = 'Tap a number to select it.';
+  document.getElementById('slidersHeading').textContent = 'Sliders';
   document.getElementById('resultHeading').textContent = ui.resultHeading;
   document.getElementById('currentResultLabel').textContent = ui.currentResultLabel;
   document.getElementById('msSumLabel').textContent = ui.msSumLabel;
   document.getElementById('eaSumLabel').textContent = ui.eaSumLabel;
-  document.getElementById('msRangeLabel').textContent = ui.msRangeLabel;
-  document.getElementById('eaRangeLabel').textContent = ui.eaRangeLabel;
-  document.getElementById('totalBuildsLabel').textContent = ui.totalBuildsLabel;
-  document.getElementById('msPairsSummary').textContent = ui.msPairsSummary;
-  document.getElementById('eaPairsSummary').textContent = ui.eaPairsSummary;
   currentResultEl.textContent = ui.currentResultEmpty;
 }
 
@@ -415,21 +404,10 @@ function render() {
   const goal = goals[parseInt(selectEl.value || '0', 10)];
   sanitizeInvalidPicks(goal);
 
-  const msPairs = buildMappedPairs('movement', 'speech', goal.msBand[0], goal.msBand[1]);
-  const eaPairs = buildMappedPairs('energy', 'attitude', goal.eaBand[0], goal.eaBand[1]);
-
   goalBandsEl.innerHTML = `
-    <span class="personality-title" style="--personality-color: ${goal.detail.color};">${goal.name}</span>
+    <span class="personality-title">${goal.name}</span>
     <span class="personality-subtitle">${goal.detail.inGameName}</span>
-    <span>${goal.detail.description}</span>
-    <span class="personality-range">${format(currentRegion.ui.rangeText, { ms: goal.msBandLabel, ea: goal.eaBandLabel })}</span>
   `;
-
-  msRangeEl.textContent = `${goal.msBand[0]} to ${goal.msBand[1]}`;
-  eaRangeEl.textContent = `${goal.eaBand[0]} to ${goal.eaBand[1]}`;
-  totalBuildsEl.textContent = format(currentRegion.ui.combinationsText, { count: msPairs.length * eaPairs.length * 8 });
-  msPairsEl.textContent = pairLines(currentRegion.ui.pairTitleMs, msPairs);
-  eaPairsEl.textContent = pairLines(currentRegion.ui.pairTitleEa, eaPairs);
 
   renderSliders(goal);
   renderCurrentResult(goal);
@@ -578,21 +556,6 @@ function mappedValue(key, visibleValue) {
   const mapped = SLIDER_MAPPED_VALUES[key];
   if (!mapped || visibleValue < 1 || visibleValue > 8) return 0;
   return mapped[visibleValue - 1];
-}
-
-function buildMappedPairs(firstKey, secondKey, minSum, maxSum) {
-  const pairs = [];
-  for (let a = 1; a <= 8; a += 1) {
-    for (let b = 1; b <= 8; b += 1) {
-      const sum = mappedValue(firstKey, a) + mappedValue(secondKey, b);
-      if (sum >= minSum && sum <= maxSum) pairs.push([a, b]);
-    }
-  }
-  return pairs;
-}
-
-function pairLines(title, pairs) {
-  return `${format(currentRegion.ui.pairText, { title, count: pairs.length })}\n${pairs.map(([a, b]) => `(${a}, ${b})`).join(', ')}`;
 }
 
 function format(template, values) {

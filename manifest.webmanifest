@@ -1,0 +1,17 @@
+{
+  "name": "Tomodachi Personality Planner",
+  "short_name": "Tomodachi",
+  "description": "Simple Tomodachi Life personality planner",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f5f7",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/social-preview.svg",
+      "sizes": "1200x630",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
