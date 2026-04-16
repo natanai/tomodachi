@@ -45,7 +45,9 @@ const BASE_EN_UI = {
   pairTitleEa: 'Energy + Attitude',
   pairText: '{title} pairs ({count}):',
   resultText: '{name} — {group}{matchSuffix}',
-  resultMatchSuffix: ' (matches target)'
+  resultMatchSuffix: ' (matches target)',
+  resultMatchState: 'Matches target',
+  resultMissState: 'Different from target'
 };
 
 const BASE_EN_GROUPS = {
@@ -418,15 +420,22 @@ function render() {
   const msPairs = buildMappedPairs('movement', 'speech', goal.msBand[0], goal.msBand[1]);
   const eaPairs = buildMappedPairs('energy', 'attitude', goal.eaBand[0], goal.eaBand[1]);
 
+  document.documentElement.style.setProperty('--personality-color', goal.detail.color);
+
   goalBandsEl.innerHTML = `
-    <span class="personality-title" style="--personality-color: ${goal.detail.color};">${goal.name}</span>
-    <span class="personality-subtitle">${goal.detail.inGameName}</span>
-    <span>${goal.detail.description}</span>
-    <span class="personality-range">${format(currentRegion.ui.rangeText, { ms: goal.msBandLabel, ea: goal.eaBandLabel })}</span>
+    <div class="personality-top">
+      <h3 class="personality-title" style="--personality-color: ${goal.detail.color};">${goal.name}</h3>
+      <span class="personality-subtitle">${goal.detail.inGameName}</span>
+    </div>
+    <p class="personality-description">${goal.detail.description}</p>
+    <div class="badge-row" aria-label="Target ranges">
+      <p class="range-chip"><strong>Movement + Speech:</strong> ${goal.msBandLabel}</p>
+      <p class="range-chip"><strong>Energy + Attitude:</strong> ${goal.eaBandLabel}</p>
+    </div>
   `;
 
-  msRangeEl.textContent = `${goal.msBand[0]} to ${goal.msBand[1]}`;
-  eaRangeEl.textContent = `${goal.eaBand[0]} to ${goal.eaBand[1]}`;
+  msRangeEl.textContent = `${goal.msBand[0]}–${goal.msBand[1]}`;
+  eaRangeEl.textContent = `${goal.eaBand[0]}–${goal.eaBand[1]}`;
   totalBuildsEl.textContent = format(currentRegion.ui.combinationsText, { count: msPairs.length * eaPairs.length * 8 });
   msPairsEl.textContent = pairLines(currentRegion.ui.pairTitleMs, msPairs);
   eaPairsEl.textContent = pairLines(currentRegion.ui.pairTitleEa, eaPairs);
@@ -559,11 +568,11 @@ function renderCurrentResult(goal) {
   const resultGroup = currentRegion.groups[getGroupKey(eaBand, msBand)];
   const matchesGoal = personalityKey === goal.personalityKey;
 
-  currentResultEl.textContent = format(currentRegion.ui.resultText, {
-    name: result.name,
-    group: resultGroup,
-    matchSuffix: matchesGoal ? currentRegion.ui.resultMatchSuffix : ''
-  });
+  currentResultEl.innerHTML = `
+    <span class="result-name">${result.name}</span>
+    <span class="result-group">${resultGroup}</span>
+    <span class="status-chip">${matchesGoal ? currentRegion.ui.resultMatchState : currentRegion.ui.resultMissState}</span>
+  `;
   currentResultEl.className = matchesGoal ? 'ok' : 'warn';
 }
 
