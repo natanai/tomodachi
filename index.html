@@ -2,25 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tomodachi Life Mii Personality Planner</title>
-  <meta name="description" content="Plan Tomodachi Life Mii personalities by selecting a target and matching valid slider combinations." />
-  <meta property="og:title" content="Tomodachi Life Mii Personality Planner" />
-  <meta property="og:description" content="Pick a personality, match valid slider values, and get the exact Mii personality result." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Tomodachi Personality Planner</title>
+  <meta name="description" content="Simple Tomodachi Life personality planner." />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Tomodachi" />
+  <meta property="og:title" content="Tomodachi Personality Planner" />
+  <meta property="og:description" content="Pick a personality target and match slider values." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/social-preview.svg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Tomodachi Life Mii Personality Planner" />
-  <meta name="twitter:description" content="Pick a personality, match valid slider values, and get the exact Mii personality result." />
+  <meta name="twitter:title" content="Tomodachi Personality Planner" />
+  <meta name="twitter:description" content="Pick a personality target and match slider values." />
   <meta name="twitter:image" content="/social-preview.svg" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/social-preview.svg" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app">
-    <h1 id="pageTitle">Tomodachi Life Mii Personality Planner</h1>
-    <p id="pageSubtitle" class="subtitle">Pick a personality, then build sliders that match it.</p>
+    <h1 id="pageTitle">Tomodachi Personality Planner</h1>
 
     <section class="panel controls">
       <label id="regionLabel" for="regionSelect">Region</label>
@@ -29,30 +32,19 @@
       <label id="personalityLabel" for="personalitySelect">Target personality</label>
       <select id="personalitySelect"></select>
       <p id="goalBands" class="description"></p>
-      <p id="hintText" class="hint">Click a number to select it. Grayed-out options can’t be used for this target.</p>
+      <p id="hintText" class="hint">Tap a number to select it.</p>
     </section>
 
     <section class="panel sliders-panel">
-      <h2 id="slidersHeading">Set your sliders</h2>
+      <h2 id="slidersHeading">Sliders</h2>
       <div id="sliderGrid" class="slider-grid"></div>
     </section>
 
     <section class="panel breakdown">
       <h2 id="resultHeading">Result</h2>
       <p><strong id="currentResultLabel">Current result:</strong> <span id="currentResult">Select Movement, Speech, Energy, and Attitude to see your result.</span></p>
-      <p><strong id="msSumLabel">Movement + Speech sum:</strong> <span id="msSum">—</span></p>
-      <p><strong id="eaSumLabel">Energy + Attitude sum:</strong> <span id="eaSum">—</span></p>
-      <p><strong id="msRangeLabel">Target Movement + Speech range:</strong> <span id="msRange"></span></p>
-      <p><strong id="eaRangeLabel">Target Energy + Attitude range:</strong> <span id="eaRange"></span></p>
-      <p><strong id="totalBuildsLabel">Total valid builds (including Overall):</strong> <span id="totalBuilds"></span></p>
-      <details>
-        <summary id="msPairsSummary">Show valid Movement/Speech pairs</summary>
-        <pre id="msPairs"></pre>
-      </details>
-      <details>
-        <summary id="eaPairsSummary">Show valid Energy/Attitude pairs</summary>
-        <pre id="eaPairs"></pre>
-      </details>
+      <p><strong id="msSumLabel">Movement + Speech:</strong> <span id="msSum">—</span></p>
+      <p><strong id="eaSumLabel">Energy + Attitude:</strong> <span id="eaSum">—</span></p>
     </section>
   </main>
 
