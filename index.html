@@ -7,33 +7,61 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="app">
-    <h1 id="pageTitle">Tomodachi Life Mii Personality Planner</h1>
-    <p id="pageSubtitle" class="subtitle">Pick a personality, then build sliders that match it.</p>
+  <div class="page-bg" aria-hidden="true"></div>
+  <main class="site-shell">
+    <section class="card hero-card" aria-labelledby="pageTitle">
+      <div class="hero-content">
+        <p class="eyebrow">Tomodachi Fan Companion</p>
+        <h1 id="pageTitle">Tomodachi Life Mii Personality Planner</h1>
+        <p id="pageSubtitle" class="subtitle">Pick a personality, then build sliders that match it.</p>
+        <p class="hero-helper">Use this guide to find slider setups that can produce your target personality.</p>
+      </div>
+    </section>
 
-    <section class="panel controls">
-      <label id="regionLabel" for="regionSelect">Region</label>
-      <select id="regionSelect"></select>
+    <section class="card planner-card" aria-labelledby="plannerHeading">
+      <div class="card-heading-wrap">
+        <h2 id="plannerHeading">Planner setup</h2>
+      </div>
 
-      <label id="personalityLabel" for="personalitySelect">Target personality</label>
-      <select id="personalitySelect"></select>
-      <p id="goalBands" class="description"></p>
+      <div class="form-grid">
+        <div class="field-group">
+          <label id="regionLabel" for="regionSelect">Region</label>
+          <select id="regionSelect"></select>
+        </div>
+        <div class="field-group">
+          <label id="personalityLabel" for="personalitySelect">Target personality</label>
+          <select id="personalitySelect"></select>
+        </div>
+      </div>
+
+      <article id="goalBands" class="goal-profile" aria-live="polite"></article>
       <p id="hintText" class="hint">Click a number to select it. Grayed-out options can’t be used for this target.</p>
     </section>
 
-    <section class="panel sliders-panel">
-      <h2 id="slidersHeading">Set your sliders</h2>
+    <section class="card slider-card" aria-labelledby="slidersHeading">
+      <h2 id="slidersHeading">Choose your slider values</h2>
       <div id="sliderGrid" class="slider-grid"></div>
     </section>
 
-    <section class="panel breakdown">
-      <h2 id="resultHeading">Result</h2>
-      <p><strong id="currentResultLabel">Current result:</strong> <span id="currentResult">Select Movement, Speech, Energy, and Attitude to see your result.</span></p>
-      <p><strong id="msSumLabel">Movement + Speech sum:</strong> <span id="msSum">—</span></p>
-      <p><strong id="eaSumLabel">Energy + Attitude sum:</strong> <span id="eaSum">—</span></p>
-      <p><strong id="msRangeLabel">Target Movement + Speech range:</strong> <span id="msRange"></span></p>
-      <p><strong id="eaRangeLabel">Target Energy + Attitude range:</strong> <span id="eaRange"></span></p>
-      <p><strong id="totalBuildsLabel">Total valid builds (including Overall):</strong> <span id="totalBuilds"></span></p>
+    <section class="card result-card" aria-labelledby="resultHeading">
+      <h2 id="resultHeading">Current build result</h2>
+
+      <div class="result-main">
+        <p id="currentResultLabel" class="result-label">Current result</p>
+        <p id="currentResult" class="result-value">Select Movement, Speech, Energy, and Attitude to see your result.</p>
+      </div>
+
+      <div class="result-stats" role="list" aria-label="Current sums and target ranges">
+        <p class="stat-chip" role="listitem"><span id="msSumLabel">Movement + Speech sum:</span> <strong id="msSum">—</strong></p>
+        <p class="stat-chip" role="listitem"><span id="eaSumLabel">Energy + Attitude sum:</span> <strong id="eaSum">—</strong></p>
+        <p class="stat-chip" role="listitem"><span id="msRangeLabel">Target Movement + Speech range:</span> <strong id="msRange"></strong></p>
+        <p class="stat-chip" role="listitem"><span id="eaRangeLabel">Target Energy + Attitude range:</span> <strong id="eaRange"></strong></p>
+        <p class="stat-chip total-chip" role="listitem"><span id="totalBuildsLabel">Total valid builds (including Overall):</span> <strong id="totalBuilds"></strong></p>
+      </div>
+    </section>
+
+    <section class="card details-card" aria-labelledby="detailsHeading">
+      <h2 id="detailsHeading">Valid pair details</h2>
       <details>
         <summary id="msPairsSummary">Show valid Movement/Speech pairs</summary>
         <pre id="msPairs"></pre>
