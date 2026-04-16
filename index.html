@@ -15,14 +15,20 @@
   <meta name="twitter:title" content="Tomodachi Life Mii Personality Planner" />
   <meta name="twitter:description" content="Pick a personality, match valid slider values, and get the exact Mii personality result." />
   <meta name="twitter:image" content="/social-preview.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app">
-    <h1 id="pageTitle">Tomodachi Life Mii Personality Planner</h1>
-    <p id="pageSubtitle" class="subtitle">Pick a personality, then build sliders that match it.</p>
+    <header class="app-header card">
+      <h1 id="pageTitle">Tomodachi Life Mii Personality Planner</h1>
+      <p id="pageSubtitle" class="subtitle">Pick a personality, then build sliders that match it.</p>
+    </header>
 
-    <section class="panel controls">
+    <section class="card panel controls" aria-labelledby="controlHeading">
+      <h2 id="controlHeading">Target Setup</h2>
       <label id="regionLabel" for="regionSelect">Region</label>
       <select id="regionSelect"></select>
 
@@ -32,12 +38,12 @@
       <p id="hintText" class="hint">Click a number to select it. Grayed-out options can’t be used for this target.</p>
     </section>
 
-    <section class="panel sliders-panel">
+    <section class="card panel sliders-panel" aria-labelledby="slidersHeading">
       <h2 id="slidersHeading">Set your sliders</h2>
       <div id="sliderGrid" class="slider-grid"></div>
     </section>
 
-    <section class="panel breakdown">
+    <section class="card panel breakdown" aria-labelledby="resultHeading">
       <h2 id="resultHeading">Result</h2>
       <p><strong id="currentResultLabel">Current result:</strong> <span id="currentResult">Select Movement, Speech, Energy, and Attitude to see your result.</span></p>
       <p><strong id="msSumLabel">Movement + Speech sum:</strong> <span id="msSum">—</span></p>
@@ -55,6 +61,14 @@
       </details>
     </section>
   </main>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button type="button" class="nav-item active" aria-label="Planner">🧭</button>
+    <button type="button" class="nav-item" aria-label="Personalities">🧠</button>
+    <button type="button" class="nav-item" aria-label="Builds">🎛️</button>
+    <button type="button" class="nav-item" aria-label="Results">📊</button>
+    <button type="button" class="nav-item" aria-label="Settings">⚙️</button>
+  </nav>
 
   <script src="script.js"></script>
 </body>
