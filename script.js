@@ -437,8 +437,8 @@ function render() {
   msRangeEl.textContent = goal.msBandLabel;
   eaRangeEl.textContent = goal.eaBandLabel;
   totalBuildsEl.textContent = format(currentRegion.ui.combinationsText, { count: msPairs.length * eaPairs.length * 8 });
-  msPairsEl.textContent = pairLines(currentRegion.ui.pairTitleMs, msPairs);
-  eaPairsEl.textContent = pairLines(currentRegion.ui.pairTitleEa, eaPairs);
+  msPairsEl.textContent = pairLines(currentRegion.ui.pairTitleMs, msPairs, 'movement', 'speech');
+  eaPairsEl.textContent = pairLines(currentRegion.ui.pairTitleEa, eaPairs, 'energy', 'attitude');
 
   renderSliders(goal);
   renderCurrentResult(goal);
@@ -610,8 +610,10 @@ function buildMappedPairs(firstKey, secondKey, minSum, maxSum) {
   return pairs;
 }
 
-function pairLines(title, pairs) {
-  return `${format(currentRegion.ui.pairText, { title, count: pairs.length })}\n${pairs.map(([a, b]) => `(${a}, ${b})`).join(', ')}`;
+function pairLines(title, pairs, firstKey, secondKey) {
+  return `${format(currentRegion.ui.pairText, { title, count: pairs.length })}\n${pairs
+    .map(([a, b]) => `(${mappedValue(firstKey, a)}, ${mappedValue(secondKey, b)})`)
+    .join(', ')}`;
 }
 
 function format(template, values) {
