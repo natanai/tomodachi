@@ -35,21 +35,32 @@ const MODEL_MODES = {
 
 const ACTIVE_MODEL_MODE = MODEL_MODES.legacyInferred;
 
-const CONFIRMED_OBSERVATIONS = {
-  northAmerica: [
-    {
-      sliders: {
-        movement: 5,
-        speech: 8,
-        expressiveness: 8,
-        attitude: 5,
-        overall: 6
-      },
-      confirmedResultKey: 'goGetter',
-      evidenceStatus: 'confirmedObserved',
-      notes: 'Actual in-game result observed by repo owner.'
-    }
-  ]
+const CONFIRMED_EXAMPLES = {
+  northAmerica: {
+    sweetie: [{ movement: 1, speech: 1, expressiveness: 8, attitude: 8, overall: 8 }],
+    charmer: [{ movement: 5, speech: 5, expressiveness: 6, attitude: 7, overall: 8 }],
+    strategist: [{ movement: 2, speech: 2, expressiveness: 2, attitude: 3, overall: 4 }],
+    achiever: [{ movement: 6, speech: 5, expressiveness: 4, attitude: 3, overall: 2 }],
+    buddy: [{ movement: 2, speech: 3, expressiveness: 4, attitude: 5, overall: 6 }],
+    goGetter: [{ movement: 8, speech: 8, expressiveness: 8, attitude: 8, overall: 8 }],
+    perfectionist: [{ movement: 2, speech: 2, expressiveness: 2, attitude: 2, overall: 2 }],
+    visionary: [{ movement: 7, speech: 6, expressiveness: 5, attitude: 4, overall: 3 }],
+    cheerleader: [{ movement: 3, speech: 4, expressiveness: 7, attitude: 6, overall: 6 }],
+    merrymaker: [{ movement: 6, speech: 6, expressiveness: 6, attitude: 6, overall: 6 }],
+    observer: [{ movement: 1, speech: 1, expressiveness: 1, attitude: 1, overall: 1 }],
+    rogue: [{ movement: 7, speech: 6, expressiveness: 3, attitude: 4, overall: 3 }],
+    daydreamer: [{ movement: 3, speech: 4, expressiveness: 5, attitude: 6, overall: 7 }],
+    dynamo: [{ movement: 8, speech: 7, expressiveness: 6, attitude: 5, overall: 4 }],
+    thinker: [{ movement: 4, speech: 3, expressiveness: 2, attitude: 1, overall: 1 }],
+    maverick: [{ movement: 6, speech: 5, expressiveness: 1, attitude: 1, overall: 1 }]
+  }
+};
+
+const CONFIRMED_EXAMPLE_METADATA = {
+  northAmerica: {
+    evidenceStatus: 'confirmedExample',
+    sourceNote: 'Community chart example builds.'
+  }
 };
 
 const BASE_EN_UI = {
@@ -79,11 +90,14 @@ const BASE_EN_UI = {
   pairText: '{title} pairs ({count}):',
   resultText: '{legacyGroup} / {cellLabel}',
   inferredNameText: 'Inferred legacy-model label: {name}{matchSuffix}',
-  confirmedResultText: 'Confirmed current-game result: {name}{matchSuffix}',
-  confirmedStatusText: 'Confirmed by observed current-game result.',
-  confirmedDisagreementText: 'Legacy model differs for this exact build.',
+  confirmedResultText: 'Confirmed current-game example: {name}{matchSuffix}',
+  confirmedStatusText: 'Status: confirmed example available.',
+  inferredOnlyStatusText: 'Status: inferred only (no exact confirmed example match).',
+  confirmedDisagreementText: 'Legacy model disagrees for this exact build.',
   legacyComparisonText: 'Legacy-model comparison: {legacyGroup} / {cellLabel} ({name}).',
-  resultMatchSuffix: ' (matches selected target cell)'
+  resultMatchSuffix: ' (matches selected target cell)',
+  loadExampleLabel: 'Load confirmed example',
+  loadExampleUnavailable: 'No confirmed example for this target in this region.'
 };
 
 const BASE_EN_GROUPS = {
@@ -357,6 +371,7 @@ const msPairsEl = document.getElementById('msPairs');
 const eaPairsEl = document.getElementById('eaPairs');
 const resultStatusEl = document.getElementById('resultStatus');
 const honestyNoteEl = document.getElementById('honestyNote');
+const loadExampleButtonEl = document.getElementById('loadExampleButton');
 
 function initialize() {
   renderRegionOptions();
@@ -366,6 +381,7 @@ function initialize() {
     for (const key of SLIDER_KEYS) picks[key] = null;
     setupForRegion();
   });
+  loadExampleButtonEl.addEventListener('click', loadConfirmedExampleForCurrentGoal);
 
   setupForRegion();
 }
@@ -397,6 +413,8 @@ function renderStaticText() {
   document.getElementById('pageSubtitle').textContent = ui.pageSubtitle;
   document.getElementById('regionLabel').textContent = ui.regionLabel;
   document.getElementById('personalityLabel').textContent = ui.personalityLabel;
+  loadExampleButtonEl.textContent = ui.loadExampleLabel || BASE_EN_UI.loadExampleLabel;
+  loadExampleButtonEl.title = '';
   document.getElementById('hintText').textContent = ui.hintText;
   document.getElementById('slidersHeading').textContent = ui.slidersHeading;
   document.getElementById('resultHeading').textContent = ui.resultHeading;
@@ -481,6 +499,10 @@ function getGroupKey(row, col) {
 function render() {
   const goal = goals[parseInt(selectEl.value || '0', 10)];
   sanitizeInvalidPicks(goal);
+  const goalExamples = getConfirmedExamplesForGoal(currentRegion.code, goal.personalityKey);
+  loadExampleButtonEl.disabled = goalExamples.length === 0;
+  const unavailableText = currentRegion.ui.loadExampleUnavailable || BASE_EN_UI.loadExampleUnavailable;
+  loadExampleButtonEl.title = goalExamples.length === 0 ? unavailableText : '';
 
   const msPairs = buildMappedPairs('movement', 'speech', goal.msBand[0], goal.msBand[1]);
   const eaPairs = buildMappedPairs('expressiveness', 'attitude', goal.eaBand[0], goal.eaBand[1]);
@@ -500,6 +522,16 @@ function render() {
 
   renderSliders(goal);
   renderCurrentResult(goal);
+}
+
+function loadConfirmedExampleForCurrentGoal() {
+  const goal = goals[parseInt(selectEl.value || '0', 10)];
+  const example = getConfirmedExamplesForGoal(currentRegion.code, goal.personalityKey)[0];
+  if (!example) return;
+  for (const key of SLIDER_KEYS) {
+    picks[key] = example[key];
+  }
+  render();
 }
 
 function renderSliders(goal) {
@@ -577,16 +609,33 @@ function sanitizeInvalidPicks(goal) {
   }
 }
 
-function isBuildComplete(build) {
+function isCompleteBuild(build) {
   return SLIDER_KEYS.every((key) => build[key] !== null);
 }
 
-function findConfirmedObservation(regionCode, build) {
-  if (!isBuildComplete(build)) return null;
-  const observations = CONFIRMED_OBSERVATIONS[regionCode] || [];
-  return observations.find((observation) => (
-    SLIDER_KEYS.every((key) => observation.sliders[key] === build[key])
-  )) || null;
+function getConfirmedExamplesForGoal(regionCode, personalityKey) {
+  return CONFIRMED_EXAMPLES[regionCode]?.[personalityKey] || [];
+}
+
+function findMatchingConfirmedExample(regionCode, build) {
+  if (!isCompleteBuild(build)) return null;
+  const regionalExamples = CONFIRMED_EXAMPLES[regionCode] || {};
+
+  for (const [personalityKey, examples] of Object.entries(regionalExamples)) {
+    for (const sliders of examples) {
+      const matches = SLIDER_KEYS.every((key) => sliders[key] === build[key]);
+      if (matches) {
+        return {
+          personalityKey,
+          sliders,
+          evidenceStatus: CONFIRMED_EXAMPLE_METADATA[regionCode]?.evidenceStatus || 'confirmedExample',
+          sourceNote: CONFIRMED_EXAMPLE_METADATA[regionCode]?.sourceNote || ''
+        };
+      }
+    }
+  }
+
+  return null;
 }
 
 function inferLegacyResultKey(build) {
@@ -618,23 +667,23 @@ function isLegacyCompatible(goal, build) {
 }
 
 function doesBuildMatchGoal(goal, build, regionCode) {
-  if (!isBuildComplete(build)) return isLegacyCompatible(goal, build);
-  const confirmed = findConfirmedObservation(regionCode, build);
-  if (confirmed) return confirmed.confirmedResultKey === goal.personalityKey;
+  if (!isCompleteBuild(build)) return isLegacyCompatible(goal, build);
+  const confirmed = findMatchingConfirmedExample(regionCode, build);
+  if (confirmed) return confirmed.personalityKey === goal.personalityKey;
   const inferredKey = inferLegacyResultKey(build);
   return inferredKey === goal.personalityKey;
 }
 
 function isAllowedForGoal(key, value, goal) {
   const draft = { ...picks, [key]: value };
-  if (!isBuildComplete(draft)) return isLegacyCompatible(goal, draft);
+  if (!isCompleteBuild(draft)) return isLegacyCompatible(goal, draft);
   return doesBuildMatchGoal(goal, draft, currentRegion.code);
 }
 
 function renderCurrentResult(goal) {
   const hasMs = picks.movement !== null && picks.speech !== null;
   const hasEa = picks.expressiveness !== null && picks.attitude !== null;
-  const hasFullBuild = isBuildComplete(picks);
+  const hasFullBuild = isCompleteBuild(picks);
 
   const movementMapped = hasMs ? mappedValue('movement', picks.movement) : null;
   const speechMapped = hasMs ? mappedValue('speech', picks.speech) : null;
@@ -658,11 +707,11 @@ function renderCurrentResult(goal) {
   const resultGroup = currentRegion.groups[getGroupKey(eaBand, msBand)];
   const matchesGoal = doesBuildMatchGoal(goal, picks, currentRegion.code);
   const cellLabel = `${LEGACY_BAND_LABELS[eaBand]} EA × ${LEGACY_BAND_LABELS[msBand]} MS`;
-  const confirmedObservation = hasFullBuild ? findConfirmedObservation(currentRegion.code, picks) : null;
+  const matchingConfirmedExample = hasFullBuild ? findMatchingConfirmedExample(currentRegion.code, picks) : null;
 
-  if (confirmedObservation) {
-    const confirmedResult = currentRegion.personalities[confirmedObservation.confirmedResultKey];
-    const legacyDisagrees = confirmedObservation.confirmedResultKey !== inferredPersonalityKey;
+  if (matchingConfirmedExample) {
+    const confirmedResult = currentRegion.personalities[matchingConfirmedExample.personalityKey];
+    const legacyDisagrees = matchingConfirmedExample.personalityKey !== inferredPersonalityKey;
 
     currentResultEl.textContent = format(currentRegion.ui.confirmedResultText || 'Confirmed current-game result: {name}{matchSuffix}', {
       name: confirmedResult.inGameName || confirmedResult.name,
@@ -674,8 +723,8 @@ function renderCurrentResult(goal) {
       cellLabel,
       name: result.inGameName || result.name
     });
-    const disagreement = legacyDisagrees ? ` ${currentRegion.ui.confirmedDisagreementText || 'Legacy model differs for this exact build.'}` : '';
-    resultStatusEl.textContent = `${currentRegion.ui.confirmedStatusText || 'Confirmed by observed current-game result.'} ${legacyComparison}${disagreement}`;
+    const disagreement = legacyDisagrees ? ` ${currentRegion.ui.confirmedDisagreementText || 'Legacy model disagrees for this exact build.'}` : '';
+    resultStatusEl.textContent = `${currentRegion.ui.confirmedStatusText || 'Status: confirmed example available.'} ${legacyComparison}${disagreement}`;
     currentResultEl.className = matchesGoal ? 'ok' : 'warn';
     return;
   }
@@ -688,7 +737,7 @@ function renderCurrentResult(goal) {
     name: result.inGameName || result.name,
     matchSuffix: matchesGoal ? currentRegion.ui.resultMatchSuffix : ''
   });
-  resultStatusEl.textContent = `${currentRegion.ui.resultStatusText} ${inferredName}`;
+  resultStatusEl.textContent = `${currentRegion.ui.inferredOnlyStatusText || currentRegion.ui.resultStatusText} ${inferredName}`;
   currentResultEl.className = matchesGoal ? 'ok' : 'warn';
 }
 

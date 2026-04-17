@@ -100,6 +100,22 @@ select {
   background: #fffdf5;
 }
 
+.load-example-button {
+  margin-top: 10px;
+  border: 2px solid #7a5c1f;
+  border-radius: 10px;
+  background: #fff0bd;
+  padding: 8px 12px;
+  font-weight: 700;
+  color: #5a3900;
+  cursor: pointer;
+}
+
+.load-example-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 
 .description {
   margin-top: 8px;
