@@ -1,17 +1,18 @@
 :root {
-  --bg: #f6f3e9;
-  --panel: #fff8d5;
+  --bg: #fff9a6;
+  --panel: #fff8bf;
   --panel-strong: #ffffff;
-  --border: #ddb53e;
+  --border: #db281c;
   --text: #232323;
-  --accent: #2f93de;
-  --accent-strong: #1f5f9c;
-  --danger: #d73a49;
-  --motif-red: #e60012;
+  --accent: #06acde;
+  --accent-strong: #047ea4;
+  --danger: #fe0000;
+  --motif-red: #db281c;
+  --brand-yellow: #ffec02;
   --green: #66c59b;
   --orange: #f07d12;
-  --light-orange: #f7c98d;
-  --cream: #fffdf5;
+  --light-orange: #cceefa;
+  --cream: #fffef0;
 }
 
 * { box-sizing: border-box; }
@@ -37,11 +38,11 @@ h1 {
   margin: 0 auto 10px;
   max-width: 920px;
   text-align: center;
-  background: #ffe27a;
-  border: 5px solid #d5a52b;
+  background: var(--brand-yellow);
+  border: 5px solid var(--border);
   border-radius: 24px;
   padding: 18px 14px 18px 120px;
-  box-shadow: 0 4px 0 color-mix(in srgb, #d5a52b 65%, black 35%);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--border) 65%, black 35%);
   position: relative;
 }
 
@@ -75,7 +76,7 @@ h1::after {
   margin: 0 auto 12px;
   max-width: 900px;
   font-weight: 700;
-  color: #5a3900;
+  color: #8e170f;
 }
 
 .panel {
@@ -98,7 +99,7 @@ select {
   max-width: 460px;
   font-size: 1rem;
   padding: 10px 12px;
-  border: 3px solid #7a5c1f;
+  border: 3px solid var(--accent);
   border-radius: 12px;
   background: #fffdf5;
 }
@@ -145,7 +146,7 @@ select {
   align-items: center;
   padding: 6px 8px 6px 4px;
   border-radius: 12px;
-  background: color-mix(in srgb, #fff 72%, var(--panel) 28%);
+  background: color-mix(in srgb, #fff 62%, var(--brand-yellow) 38%);
 }
 
 .slider-scale {
@@ -203,7 +204,7 @@ select {
   min-height: 32px;
   aspect-ratio: 1 / 1;
   border-radius: 8px;
-  border: 2px solid #b7854d;
+  border: 2px solid color-mix(in srgb, var(--accent) 45%, #5b5b5b 55%);
   background: var(--light-orange);
   display: grid;
   place-items: center;
@@ -216,14 +217,14 @@ select {
 }
 
 .box.allowed {
-  background: color-mix(in srgb, #fff 64%, #d7f0ff 36%);
-  border-color: color-mix(in srgb, var(--accent) 55%, #7f8ea3 45%);
+  background: color-mix(in srgb, #fff 38%, var(--accent) 62%);
+  border-color: color-mix(in srgb, var(--accent) 70%, #000 30%);
 }
 
 .box.selected {
   background: var(--motif-red);
   color: transparent;
-  border-color: color-mix(in srgb, var(--motif-red) 70%, black 30%);
+  border-color: color-mix(in srgb, var(--danger) 70%, black 30%);
   box-shadow:
     inset 0 -2px 0 color-mix(in srgb, var(--motif-red) 60%, black 40%),
     0 1px 0 rgba(255, 255, 255, 0.35);
@@ -269,7 +270,7 @@ pre {
 
 h2 {
   margin-top: 0;
-  color: #1f2e3d;
+  color: color-mix(in srgb, var(--accent-strong) 75%, #10263b 25%);
 }
 
 summary {
