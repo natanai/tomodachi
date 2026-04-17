@@ -155,14 +155,14 @@ select {
 .boxes {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 6px;
+  gap: 0;
 }
 
 .box {
   width: 100%;
   min-height: 32px;
   aspect-ratio: 1 / 1;
-  border-radius: 8px;
+  border-radius: 0;
   border: 2px solid #b7854d;
   background: var(--light-orange);
   display: grid;
@@ -172,15 +172,26 @@ select {
   cursor: pointer;
 }
 
+.box:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.box:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
 .box.allowed {
-  background: color-mix(in srgb, var(--green) 80%, white 20%);
-  border-color: color-mix(in srgb, var(--green) 90%, black 10%);
+  background: #e60012;
+  color: #fff;
+  border-color: color-mix(in srgb, #e60012 75%, black 25%);
 }
 
 .box.selected {
-  background: var(--orange);
-  color: white;
-  border-color: #a64d00;
+  background: #fff;
+  color: #e60012;
+  border-color: #e60012;
 }
 
 .box.disabled,
