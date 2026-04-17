@@ -10,17 +10,9 @@ const BAND_LABELS = ['0–3', '4–7', '8–11', '12–15'];
 const PERSONALITY_GRID = [
   ['observer', 'thinker', 'rogue', 'maverick'],
   ['strategist', 'perfectionist', 'achiever', 'visionary'],
-  ['buddy', 'daydreamer', 'charmer', 'goGetter'],
-  ['sweetie', 'cheerleader', 'merrymaker', 'dynamo']
+  ['buddy', 'daydreamer', 'merrymaker', 'dynamo'],
+  ['sweetie', 'cheerleader', 'charmer', 'goGetter']
 ];
-
-const SLIDER_MAPPED_VALUES = {
-  movement: [0, 1, 2, 3, 4, 5, 6, 7],
-  speech: [0, 1, 2, 3, 5, 6, 7, 8],
-  energy: [0, 1, 2, 3, 4, 5, 6, 7],
-  attitude: [0, 1, 2, 3, 5, 6, 7, 8],
-  overall: [0, 1, 2, 3, 4, 5, 6, 7]
-};
 
 const BASE_EN_UI = {
   pageTitle: 'Tomodachi Life Mii Personality Planner',
@@ -49,10 +41,10 @@ const BASE_EN_UI = {
 };
 
 const BASE_EN_GROUPS = {
-  easygoing: 'Easy-going',
-  energetic: 'Energetic',
+  easygoing: 'Considerate',
+  energetic: 'Outgoing',
   reserved: 'Reserved',
-  confident: 'Confident'
+  confident: 'Ambitious'
 };
 
 const BASE_EN_SLIDERS = {
@@ -568,16 +560,19 @@ function renderCurrentResult(goal) {
 }
 
 function findBandIndex(sum) {
-  for (let i = 0; i < BANDS.length; i += 1) {
-    if (sum >= BANDS[i][0] && sum <= BANDS[i][1]) return i;
-  }
-  return 0;
+  if (sum <= 3) return 0;
+  if (sum <= 7) return 1;
+  if (sum <= 11) return 2;
+  return 3;
 }
 
 function mappedValue(key, visibleValue) {
-  const mapped = SLIDER_MAPPED_VALUES[key];
-  if (!mapped || visibleValue < 1 || visibleValue > 8) return 0;
-  return mapped[visibleValue - 1];
+  const sliderIndex = visibleValue - 1;
+  if (sliderIndex < 0 || sliderIndex > 7) return 0;
+  if (key === 'speech' || key === 'attitude') {
+    return sliderIndex <= 3 ? sliderIndex : sliderIndex + 1;
+  }
+  return sliderIndex;
 }
 
 function buildMappedPairs(firstKey, secondKey, minSum, maxSum) {
