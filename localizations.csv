@@ -124,7 +124,7 @@ europeEnglish,personalities,rogue,name,Individualist
 europeEnglish,personalities,rogue,inGameName,Individualist
 europeEnglish,personalities,maverick,name,Headstrong
 europeEnglish,personalities,maverick,inGameName,Headstrong
-pal,groups,easygoing,,Easy-Going
+pal,groups,easygoing,,Easy-going
 pal,groups,energetic,,Energetic
 pal,groups,reserved,,Reserved
 pal,groups,confident,,Confident
@@ -197,12 +197,6 @@ europeGerman,personalities,achiever,name,Macher
 europeGerman,personalities,achiever,inGameName,Macher
 europeGerman,personalities,dynamo,name,Energiebündel
 europeGerman,personalities,dynamo,inGameName,Energiebündel
-australia,personalities,goGetter,name,Trailblazer
-australia,personalities,goGetter,inGameName,Adventurer (Trailblazer)
-australia,personalities,maverick,name,Firebrand
-australia,personalities,maverick,inGameName,Headstrong (Firebrand)
-australia,personalities,cheerleader,name,Upbeat
-australia,personalities,cheerleader,inGameName,Optimist (Upbeat)
 japan,ui,pageTitle,,トモダチコレクション 新生活 性格プランナー
 japan,ui,pageSubtitle,,
 japan,ui,regionLabel,,地域
