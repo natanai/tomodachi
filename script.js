@@ -23,7 +23,7 @@ const BASE_EN_UI = {
   personalityLabel: 'Target personality',
   freePlacementOption: 'Place Freely',
   freePlacementDescription: 'No target restrictions. Pick any slider values to see the resulting personality.',
-  hintText: 'Click a number to select it. Grayed-out options can’t be used for this target.',
+  hintText: '',
   slidersHeading: 'Set your sliders',
   resultHeading: 'Result',
   currentResultLabel: 'Current result:',
@@ -179,7 +179,7 @@ const REGIONS = {
       pageSubtitle: '性格を選んで、条件に合うスライダーを作成しましょう。',
       regionLabel: '地域',
       personalityLabel: '目標の性格',
-      hintText: '数字を押して選択します。グレーの数字はこの目標では使えません。',
+      hintText: '',
       slidersHeading: 'スライダー設定',
       resultHeading: '結果',
       currentResultLabel: '現在の結果：',
@@ -427,7 +427,7 @@ function renderSliders(goal) {
   sliderGridEl.innerHTML = '';
   SLIDER_KEYS.forEach((key) => {
     const [baseLabel, left, right] = currentRegion.sliderLabels[key];
-    const label = key === 'overall'
+    const ariaLabel = key === 'overall'
       ? `${baseLabel} (${currentRegion.ui.overallNote})`
       : baseLabel;
 
@@ -436,7 +436,7 @@ function renderSliders(goal) {
 
     const trait = document.createElement('div');
     trait.className = 'trait';
-    trait.textContent = label;
+    trait.textContent = baseLabel;
 
     const leftPole = document.createElement('div');
     leftPole.className = 'pole';
@@ -449,9 +449,10 @@ function renderSliders(goal) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'box';
+      btn.classList.add(`pos-${i}`);
       const displayedValue = key === 'overall' ? i : mappedValue(key, i);
-      btn.textContent = displayedValue;
-      btn.setAttribute('aria-label', `${label} ${displayedValue}`);
+      btn.textContent = '';
+      btn.setAttribute('aria-label', `${ariaLabel} ${displayedValue}`);
 
       const allowed = isAllowedForGoal(key, i, goal);
       if (allowed) {
