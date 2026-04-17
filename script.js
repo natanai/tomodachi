@@ -35,6 +35,23 @@ const MODEL_MODES = {
 
 const ACTIVE_MODEL_MODE = MODEL_MODES.legacyInferred;
 
+const CONFIRMED_OBSERVATIONS = {
+  northAmerica: [
+    {
+      sliders: {
+        movement: 5,
+        speech: 8,
+        expressiveness: 8,
+        attitude: 5,
+        overall: 6
+      },
+      confirmedResultKey: 'goGetter',
+      evidenceStatus: 'confirmedObserved',
+      notes: 'Actual in-game result observed by repo owner.'
+    }
+  ]
+};
+
 const BASE_EN_UI = {
   pageTitle: 'Tomodachi Life Mii Personality Planner',
   pageSubtitle: 'Pick an inferred personality cell, then explore slider builds that fit the legacy model.',
@@ -62,6 +79,10 @@ const BASE_EN_UI = {
   pairText: '{title} pairs ({count}):',
   resultText: '{legacyGroup} / {cellLabel}',
   inferredNameText: 'Inferred legacy-model label: {name}{matchSuffix}',
+  confirmedResultText: 'Confirmed current-game result: {name}{matchSuffix}',
+  confirmedStatusText: 'Confirmed by observed current-game result.',
+  confirmedDisagreementText: 'Legacy model differs for this exact build.',
+  legacyComparisonText: 'Legacy-model comparison: {legacyGroup} / {cellLabel} ({name}).',
   resultMatchSuffix: ' (matches selected target cell)'
 };
 
@@ -556,21 +577,37 @@ function sanitizeInvalidPicks(goal) {
   }
 }
 
-function isAllowedForGoal(key, value, goal) {
-  if (key === 'overall') return true;
+function isBuildComplete(build) {
+  return SLIDER_KEYS.every((key) => build[key] !== null);
+}
 
-  const draft = { ...picks, [key]: value };
+function findConfirmedObservation(regionCode, build) {
+  if (!isBuildComplete(build)) return null;
+  const observations = CONFIRMED_OBSERVATIONS[regionCode] || [];
+  return observations.find((observation) => (
+    SLIDER_KEYS.every((key) => observation.sliders[key] === build[key])
+  )) || null;
+}
+
+function inferLegacyResultKey(build) {
+  if (build.movement === null || build.speech === null || build.expressiveness === null || build.attitude === null) return null;
+  const msBand = findBandIndex(mappedValue('movement', build.movement) + mappedValue('speech', build.speech));
+  const eaBand = findBandIndex(mappedValue('expressiveness', build.expressiveness) + mappedValue('attitude', build.attitude));
+  return LEGACY_MODEL_GRID[eaBand][msBand];
+}
+
+function isLegacyCompatible(goal, build) {
   for (let m = 1; m <= 8; m += 1) {
-    if (draft.movement !== null && draft.movement !== m) continue;
+    if (build.movement !== null && build.movement !== m) continue;
     for (let s = 1; s <= 8; s += 1) {
-      if (draft.speech !== null && draft.speech !== s) continue;
+      if (build.speech !== null && build.speech !== s) continue;
       const ms = mappedValue('movement', m) + mappedValue('speech', s);
       if (ms < goal.msBand[0] || ms > goal.msBand[1]) continue;
 
       for (let e = 1; e <= 8; e += 1) {
-        if (draft.expressiveness !== null && draft.expressiveness !== e) continue;
+        if (build.expressiveness !== null && build.expressiveness !== e) continue;
         for (let a = 1; a <= 8; a += 1) {
-          if (draft.attitude !== null && draft.attitude !== a) continue;
+          if (build.attitude !== null && build.attitude !== a) continue;
           const ea = mappedValue('expressiveness', e) + mappedValue('attitude', a);
           if (ea >= goal.eaBand[0] && ea <= goal.eaBand[1]) return true;
         }
@@ -580,9 +617,24 @@ function isAllowedForGoal(key, value, goal) {
   return false;
 }
 
+function doesBuildMatchGoal(goal, build, regionCode) {
+  if (!isBuildComplete(build)) return isLegacyCompatible(goal, build);
+  const confirmed = findConfirmedObservation(regionCode, build);
+  if (confirmed) return confirmed.confirmedResultKey === goal.personalityKey;
+  const inferredKey = inferLegacyResultKey(build);
+  return inferredKey === goal.personalityKey;
+}
+
+function isAllowedForGoal(key, value, goal) {
+  const draft = { ...picks, [key]: value };
+  if (!isBuildComplete(draft)) return isLegacyCompatible(goal, draft);
+  return doesBuildMatchGoal(goal, draft, currentRegion.code);
+}
+
 function renderCurrentResult(goal) {
   const hasMs = picks.movement !== null && picks.speech !== null;
   const hasEa = picks.expressiveness !== null && picks.attitude !== null;
+  const hasFullBuild = isBuildComplete(picks);
 
   const movementMapped = hasMs ? mappedValue('movement', picks.movement) : null;
   const speechMapped = hasMs ? mappedValue('speech', picks.speech) : null;
@@ -594,17 +646,39 @@ function renderCurrentResult(goal) {
 
   if (!hasMs || !hasEa) {
     currentResultEl.textContent = currentRegion.ui.currentResultEmpty;
+    resultStatusEl.textContent = currentRegion.ui.resultStatusText;
     currentResultEl.className = '';
     return;
   }
 
   const msBand = findBandIndex(movementMapped + speechMapped);
   const eaBand = findBandIndex(expressivenessMapped + attitudeMapped);
-  const personalityKey = LEGACY_MODEL_GRID[eaBand][msBand];
-  const result = currentRegion.personalities[personalityKey];
+  const inferredPersonalityKey = LEGACY_MODEL_GRID[eaBand][msBand];
+  const result = currentRegion.personalities[inferredPersonalityKey];
   const resultGroup = currentRegion.groups[getGroupKey(eaBand, msBand)];
-  const matchesGoal = personalityKey === goal.personalityKey;
+  const matchesGoal = doesBuildMatchGoal(goal, picks, currentRegion.code);
   const cellLabel = `${LEGACY_BAND_LABELS[eaBand]} EA × ${LEGACY_BAND_LABELS[msBand]} MS`;
+  const confirmedObservation = hasFullBuild ? findConfirmedObservation(currentRegion.code, picks) : null;
+
+  if (confirmedObservation) {
+    const confirmedResult = currentRegion.personalities[confirmedObservation.confirmedResultKey];
+    const legacyDisagrees = confirmedObservation.confirmedResultKey !== inferredPersonalityKey;
+
+    currentResultEl.textContent = format(currentRegion.ui.confirmedResultText || 'Confirmed current-game result: {name}{matchSuffix}', {
+      name: confirmedResult.inGameName || confirmedResult.name,
+      matchSuffix: matchesGoal ? currentRegion.ui.resultMatchSuffix : ''
+    });
+
+    const legacyComparison = format(currentRegion.ui.legacyComparisonText || 'Legacy-model comparison: {legacyGroup} / {cellLabel} ({name}).', {
+      legacyGroup: resultGroup,
+      cellLabel,
+      name: result.inGameName || result.name
+    });
+    const disagreement = legacyDisagrees ? ` ${currentRegion.ui.confirmedDisagreementText || 'Legacy model differs for this exact build.'}` : '';
+    resultStatusEl.textContent = `${currentRegion.ui.confirmedStatusText || 'Confirmed by observed current-game result.'} ${legacyComparison}${disagreement}`;
+    currentResultEl.className = matchesGoal ? 'ok' : 'warn';
+    return;
+  }
 
   currentResultEl.textContent = format(currentRegion.ui.resultText, {
     legacyGroup: resultGroup,
