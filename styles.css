@@ -183,15 +183,15 @@ select {
 }
 
 .box.allowed {
-  background: #e60012;
-  color: #fff;
-  border-color: color-mix(in srgb, #e60012 75%, black 25%);
-}
-
-.box.selected {
   background: #fff;
   color: #e60012;
   border-color: #e60012;
+}
+
+.box.selected {
+  background: #e60012;
+  color: #fff;
+  border-color: color-mix(in srgb, #e60012 75%, black 25%);
 }
 
 .box.disabled,
