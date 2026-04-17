@@ -21,23 +21,14 @@ const BASE_EN_UI = {
   pageSubtitle: 'Pick a personality, then build sliders that match it.',
   regionLabel: 'Region',
   personalityLabel: 'Target personality',
+  freePlacementOption: 'Place Freely',
+  freePlacementDescription: 'No target restrictions. Pick any slider values to see the resulting personality.',
   hintText: 'Click a number to select it. Grayed-out options can’t be used for this target.',
   slidersHeading: 'Set your sliders',
   resultHeading: 'Result',
   currentResultLabel: 'Current result:',
   currentResultEmpty: 'Select Movement, Speech, Energy, and Attitude to see your result.',
-  msSumLabel: 'Movement + Speech sum:',
-  eaSumLabel: 'Energy + Attitude sum:',
-  msRangeLabel: 'Target Movement + Speech range:',
-  eaRangeLabel: 'Target Energy + Attitude range:',
-  totalBuildsLabel: 'Total valid builds (including Overall):',
-  msPairsSummary: 'Show valid Movement/Speech pairs',
-  eaPairsSummary: 'Show valid Energy/Attitude pairs',
   rangeText: 'Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}.',
-  combinationsText: '{count} combinations',
-  pairTitleMs: 'Movement + Speech',
-  pairTitleEa: 'Energy + Attitude',
-  pairText: '{title} pairs ({count}):',
   resultText: '{name} — {group}{matchSuffix}',
   resultMatchSuffix: ' (matches target)',
   weightingNote: 'Speech and Attitude are weighted differently in the game’s personality math.',
@@ -299,13 +290,6 @@ const selectEl = document.getElementById('personalitySelect');
 const goalBandsEl = document.getElementById('goalBands');
 const sliderGridEl = document.getElementById('sliderGrid');
 const currentResultEl = document.getElementById('currentResult');
-const msSumEl = document.getElementById('msSum');
-const eaSumEl = document.getElementById('eaSum');
-const msRangeEl = document.getElementById('msRange');
-const eaRangeEl = document.getElementById('eaRange');
-const totalBuildsEl = document.getElementById('totalBuilds');
-const msPairsEl = document.getElementById('msPairs');
-const eaPairsEl = document.getElementById('eaPairs');
 
 function initialize() {
   renderRegionOptions();
@@ -350,19 +334,17 @@ function renderStaticText() {
   document.getElementById('slidersHeading').textContent = ui.slidersHeading;
   document.getElementById('resultHeading').textContent = ui.resultHeading;
   document.getElementById('currentResultLabel').textContent = ui.currentResultLabel;
-  document.getElementById('msSumLabel').textContent = ui.msSumLabel;
-  document.getElementById('eaSumLabel').textContent = ui.eaSumLabel;
-  document.getElementById('msRangeLabel').textContent = ui.msRangeLabel;
-  document.getElementById('eaRangeLabel').textContent = ui.eaRangeLabel;
-  document.getElementById('totalBuildsLabel').textContent = ui.totalBuildsLabel;
-  document.getElementById('msPairsSummary').textContent = ui.msPairsSummary;
-  document.getElementById('eaPairsSummary').textContent = ui.eaPairsSummary;
   document.getElementById('weightingNote').textContent = ui.weightingNote;
   currentResultEl.textContent = ui.currentResultEmpty;
 }
 
 function populatePersonalityOptions() {
   selectEl.innerHTML = '';
+  const freeOption = document.createElement('option');
+  freeOption.value = 'free';
+  freeOption.textContent = currentRegion.ui.freePlacementOption;
+  selectEl.appendChild(freeOption);
+
   const groupOrder = ['easygoing', 'energetic', 'reserved', 'confident'];
 
   groupOrder.forEach((groupKey) => {
@@ -420,25 +402,20 @@ function getGroupKey(row, col) {
 }
 
 function render() {
-  const goal = goals[parseInt(selectEl.value || '0', 10)];
-  if (!goal) return;
-  sanitizeInvalidPicks(goal);
-
-  const msPairs = buildMappedPairs('movement', 'speech', goal.msBand[0], goal.msBand[1]);
-  const eaPairs = buildMappedPairs('energy', 'attitude', goal.eaBand[0], goal.eaBand[1]);
-
-  goalBandsEl.innerHTML = `
-    <span class="personality-title" style="--personality-color: ${goal.detail.color};">${goal.name}</span>
-    <span class="personality-subtitle">${goal.detail.inGameName}</span>
-    <span>${goal.detail.description}</span>
-    <span class="personality-range">${format(currentRegion.ui.rangeText, { ms: goal.msBandLabel, ea: goal.eaBandLabel })}</span>
-  `;
-
-  msRangeEl.textContent = goal.msBandLabel;
-  eaRangeEl.textContent = goal.eaBandLabel;
-  totalBuildsEl.textContent = format(currentRegion.ui.combinationsText, { count: msPairs.length * eaPairs.length * 8 });
-  msPairsEl.textContent = pairLines(currentRegion.ui.pairTitleMs, msPairs, 'movement', 'speech');
-  eaPairsEl.textContent = pairLines(currentRegion.ui.pairTitleEa, eaPairs, 'energy', 'attitude');
+  const isFreePlacement = selectEl.value === 'free';
+  const goal = isFreePlacement ? null : goals[parseInt(selectEl.value || '0', 10)];
+  if (!isFreePlacement && !goal) return;
+  if (goal) {
+    sanitizeInvalidPicks(goal);
+    goalBandsEl.innerHTML = `
+      <span class="personality-title" style="--personality-color: ${goal.detail.color};">${goal.name}</span>
+      <span class="personality-subtitle">${goal.detail.inGameName}</span>
+      <span>${goal.detail.description}</span>
+      <span class="personality-range">${format(currentRegion.ui.rangeText, { ms: goal.msBandLabel, ea: goal.eaBandLabel })}</span>
+    `;
+  } else {
+    goalBandsEl.textContent = currentRegion.ui.freePlacementDescription;
+  }
 
   renderSliders(goal);
   renderCurrentResult(goal);
@@ -511,6 +488,7 @@ function renderSliders(goal) {
 }
 
 function sanitizeInvalidPicks(goal) {
+  if (!goal) return;
   let changed = true;
   while (changed) {
     changed = false;
@@ -525,6 +503,7 @@ function sanitizeInvalidPicks(goal) {
 }
 
 function isAllowedForGoal(key, value, goal) {
+  if (!goal) return true;
   if (key === 'overall') return true;
 
   const draft = { ...picks, [key]: value };
@@ -557,9 +536,6 @@ function renderCurrentResult(goal) {
   const energyMapped = hasEa ? mappedValue('energy', picks.energy) : null;
   const attitudeMapped = hasEa ? mappedValue('attitude', picks.attitude) : null;
 
-  msSumEl.textContent = hasMs ? `${movementMapped + speechMapped}` : '—';
-  eaSumEl.textContent = hasEa ? `${energyMapped + attitudeMapped}` : '—';
-
   if (!hasMs || !hasEa) {
     currentResultEl.textContent = currentRegion.ui.currentResultEmpty;
     currentResultEl.className = '';
@@ -571,14 +547,14 @@ function renderCurrentResult(goal) {
   const personalityKey = PERSONALITY_GRID[eaBand][msBand];
   const result = currentRegion.personalities[personalityKey];
   const resultGroup = currentRegion.groups[getGroupKey(eaBand, msBand)];
-  const matchesGoal = personalityKey === goal.personalityKey;
+  const matchesGoal = goal ? personalityKey === goal.personalityKey : false;
 
   currentResultEl.textContent = format(currentRegion.ui.resultText, {
     name: result.name,
     group: resultGroup,
     matchSuffix: matchesGoal ? currentRegion.ui.resultMatchSuffix : ''
   });
-  currentResultEl.className = matchesGoal ? 'ok' : 'warn';
+  currentResultEl.className = goal ? (matchesGoal ? 'ok' : 'warn') : '';
 }
 
 function findBandIndex(sum) {
@@ -597,23 +573,6 @@ function mappedValue(key, visibleValue) {
     return sliderIndex <= 3 ? sliderIndex : sliderIndex + 1;
   }
   return sliderIndex;
-}
-
-function buildMappedPairs(firstKey, secondKey, minSum, maxSum) {
-  const pairs = [];
-  for (let a = 1; a <= 8; a += 1) {
-    for (let b = 1; b <= 8; b += 1) {
-      const sum = mappedValue(firstKey, a) + mappedValue(secondKey, b);
-      if (sum >= minSum && sum <= maxSum) pairs.push([a, b]);
-    }
-  }
-  return pairs;
-}
-
-function pairLines(title, pairs, firstKey, secondKey) {
-  return `${format(currentRegion.ui.pairText, { title, count: pairs.length })}\n${pairs
-    .map(([a, b]) => `(${mappedValue(firstKey, a)}, ${mappedValue(secondKey, b)})`)
-    .join(', ')}`;
 }
 
 function format(template, values) {

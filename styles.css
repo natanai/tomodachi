@@ -7,7 +7,6 @@
   --green: #66c59b;
   --orange: #f07d12;
   --light-orange: #f7c98d;
-  --blue: #2f93de;
   --cream: #fffdf5;
 }
 
@@ -221,18 +220,6 @@ summary {
   color: #1f2e3d;
 }
 
-.breakdown {
-  position: relative;
-  overflow: hidden;
-}
-
-.breakdown::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 14px;
-  background: var(--blue);
-}
 
 @media (max-width: 720px) {
   .app {
