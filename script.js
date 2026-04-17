@@ -126,7 +126,9 @@ function buildRegionsFromSheet(csvText) {
 
   const byRegion = {};
   for (let i = 1; i < lines.length; i += 1) {
-    const [region, category, key, subkey, value] = parseCsvRow(lines[i]);
+    const parsedRow = parseCsvRow(lines[i]);
+    const [region, category, key, subkey = ''] = parsedRow;
+    const value = parsedRow.slice(4).join(', ').trim();
     if (!region || !category || !key) continue;
 
     if (!byRegion[region]) {
