@@ -7,7 +7,6 @@
   --green: #66c59b;
   --orange: #f07d12;
   --light-orange: #f7c98d;
-  --blue: #2f93de;
   --cream: #fffdf5;
 }
 
@@ -154,40 +153,48 @@ select {
 
 .boxes {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(8, minmax(26px, 1fr));
+  gap: 8px;
+  padding: 8px;
+  border-radius: 999px;
+  background: #e60012;
+  border: 2px solid color-mix(in srgb, #e60012 72%, black 28%);
+  box-shadow: inset 0 -2px 0 color-mix(in srgb, #e60012 55%, black 45%);
 }
 
 .box {
   width: 100%;
-  min-height: 32px;
+  min-height: 28px;
   aspect-ratio: 1 / 1;
-  border-radius: 8px;
-  border: 2px solid #b7854d;
-  background: var(--light-orange);
+  border-radius: 50%;
+  border: 0;
+  background: #fff;
+  color: #8a8a8a;
   display: grid;
   place-items: center;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   cursor: pointer;
+  box-shadow: 0 2px 0 color-mix(in srgb, #fff 55%, #b8b8b8 45%);
 }
 
 .box.allowed {
-  background: color-mix(in srgb, var(--green) 80%, white 20%);
-  border-color: color-mix(in srgb, var(--green) 90%, black 10%);
+  color: #3a3a3a;
 }
 
 .box.selected {
-  background: var(--orange);
-  color: white;
-  border-color: #a64d00;
+  background: #fff;
+  color: #e60012;
+  box-shadow:
+    0 2px 0 color-mix(in srgb, #fff 55%, #b8b8b8 45%),
+    inset 0 0 0 3px #e60012;
 }
 
 .box.disabled,
 .box:disabled {
-  background: #d9d9d9;
-  color: #7b7b7b;
-  border-color: #b5b5b5;
+  background: #e4e4e4;
+  color: #a4a4a4;
+  box-shadow: none;
   cursor: not-allowed;
 }
 
@@ -224,14 +231,6 @@ summary {
 .breakdown {
   position: relative;
   overflow: hidden;
-}
-
-.breakdown::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 14px;
-  background: var(--blue);
 }
 
 @media (max-width: 720px) {
