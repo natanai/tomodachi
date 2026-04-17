@@ -427,7 +427,7 @@ function renderSliders(goal) {
   sliderGridEl.innerHTML = '';
   SLIDER_KEYS.forEach((key) => {
     const [baseLabel, left, right] = currentRegion.sliderLabels[key];
-    const label = key === 'overall'
+    const ariaLabel = key === 'overall'
       ? `${baseLabel} (${currentRegion.ui.overallNote})`
       : baseLabel;
 
@@ -436,7 +436,7 @@ function renderSliders(goal) {
 
     const trait = document.createElement('div');
     trait.className = 'trait';
-    trait.textContent = label;
+    trait.textContent = baseLabel;
 
     const leftPole = document.createElement('div');
     leftPole.className = 'pole';
@@ -449,9 +449,10 @@ function renderSliders(goal) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'box';
+      btn.classList.add(`pos-${i}`);
       const displayedValue = key === 'overall' ? i : mappedValue(key, i);
-      btn.textContent = displayedValue;
-      btn.setAttribute('aria-label', `${label} ${displayedValue}`);
+      btn.textContent = '';
+      btn.setAttribute('aria-label', `${ariaLabel} ${displayedValue}`);
 
       const allowed = isAllowedForGoal(key, i, goal);
       if (allowed) {
