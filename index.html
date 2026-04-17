@@ -4,16 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tomodachi Life Mii Personality Planner</title>
-  <meta name="description" content="Plan Tomodachi Life Mii personalities by selecting a target and matching valid slider combinations." />
+  <meta name="description" content="Explore inferred Tomodachi Life personality cells using a legacy band model and valid slider combinations." />
   <meta property="og:title" content="Tomodachi Life Mii Personality Planner" />
-  <meta property="og:description" content="Pick a personality, match valid slider values, and get the exact Mii personality result." />
+  <meta property="og:description" content="Pick an inferred cell, match valid slider values, and explore legacy-model personality predictions." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/social-preview.svg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Tomodachi Life Mii Personality Planner" />
-  <meta name="twitter:description" content="Pick a personality, match valid slider values, and get the exact Mii personality result." />
+  <meta name="twitter:description" content="Pick an inferred cell, match valid slider values, and explore legacy-model personality predictions." />
   <meta name="twitter:image" content="/social-preview.svg" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -28,6 +28,7 @@
 
       <label id="personalityLabel" for="personalitySelect">Target personality</label>
       <select id="personalitySelect"></select>
+      <button id="loadExampleButton" type="button" class="load-example-button">Load confirmed example</button>
       <p id="goalBands" class="description"></p>
       <p id="hintText" class="hint">Click a number to select it. Grayed-out options can’t be used for this target.</p>
     </section>
@@ -39,7 +40,9 @@
 
     <section class="panel breakdown">
       <h2 id="resultHeading">Result</h2>
-      <p><strong id="currentResultLabel">Current result:</strong> <span id="currentResult">Select Movement, Speech, Energy, and Attitude to see your result.</span></p>
+      <p><strong id="currentResultLabel">Legacy-model cell:</strong> <span id="currentResult">Select Movement, Speech, Expressiveness, and Attitude to infer a legacy-model cell.</span></p>
+      <p><strong id="resultStatusLabel">Status:</strong> <span id="resultStatus">Not yet validated against current Tomodachi Life internals.</span></p>
+      <p id="honestyNote" class="honesty-note">This planner uses an older inferred band model from previous games. Current-game wording may differ, multiple slider builds can land in the same hidden cell, and cell-to-name mapping is still being validated.</p>
       <p><strong id="msSumLabel">Movement + Speech sum:</strong> <span id="msSum">—</span></p>
       <p><strong id="eaSumLabel">Energy + Attitude sum:</strong> <span id="eaSum">—</span></p>
       <p><strong id="msRangeLabel">Target Movement + Speech range:</strong> <span id="msRange"></span></p>

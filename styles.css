@@ -100,6 +100,22 @@ select {
   background: #fffdf5;
 }
 
+.load-example-button {
+  margin-top: 10px;
+  border: 2px solid #7a5c1f;
+  border-radius: 10px;
+  background: #fff0bd;
+  padding: 8px 12px;
+  font-weight: 700;
+  color: #5a3900;
+  cursor: pointer;
+}
+
+.load-example-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 
 .description {
   margin-top: 8px;
@@ -214,6 +230,16 @@ summary {
 
 .breakdown p strong {
   color: #1f2e3d;
+}
+
+.honesty-note {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px dashed #c9952a;
+  background: #fff6dc;
+  color: #5d4400;
+  font-size: 0.95rem;
 }
 
 .breakdown {
