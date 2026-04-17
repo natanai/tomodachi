@@ -1,6 +1,9 @@
 region,category,key,subkey,value
 northAmerica,meta,lang,,en
 northAmerica,meta,regionLabel,,North America
+northAmerica,meta,datasetKey,,en_us
+northAmerica,meta,aliases,,na|us|america
+northAmerica,meta,selectable,,true
 europeEnglish,meta,lang,,en
 europeEnglish,meta,regionLabel,,Europe (English)
 europeFrench,meta,lang,,fr
@@ -8,13 +11,26 @@ europeFrench,meta,regionLabel,,Europe (Français)
 europeGerman,meta,lang,,de
 europeGerman,meta,regionLabel,,Europe (Deutsch)
 pal,meta,lang,,en
-pal,meta,regionLabel,,PAL
+pal,meta,regionLabel,,Europe / UK / PAL
+pal,meta,datasetKey,,en_gb
+pal,meta,aliases,,europe|uk|gb|ie|pal|europeEnglish
+pal,meta,selectable,,true
 australia,meta,lang,,en
 australia,meta,regionLabel,,Australia / New Zealand
+australia,meta,datasetKey,,en_gb
+australia,meta,sourceRegion,,pal
+australia,meta,aliases,,au|newZealand|nz|ausnz
+australia,meta,selectable,,true
 japan,meta,lang,,ja
 japan,meta,regionLabel,,日本
+japan,meta,datasetKey,,ja_jp
+japan,meta,aliases,,jp
+japan,meta,selectable,,true
 southKorea,meta,lang,,ko
 southKorea,meta,regionLabel,,대한민국
+southKorea,meta,datasetKey,,ko_kr
+southKorea,meta,aliases,,korea|kr
+southKorea,meta,selectable,,true
 northAmerica,ui,pageTitle,,Tomodachi Life Mii Personality Planner
 northAmerica,ui,pageSubtitle,,
 northAmerica,ui,regionLabel,,Region
