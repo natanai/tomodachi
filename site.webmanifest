@@ -1,0 +1,17 @@
+{
+  "name": "Tomodachi Life Mii Personality Planner",
+  "short_name": "Tomodachi",
+  "start_url": "/tomodachi/",
+  "scope": "/tomodachi/",
+  "display": "standalone",
+  "background_color": "#f6f3e9",
+  "theme_color": "#e60012",
+  "icons": [
+    {
+      "src": "/tomodachi/pull-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
