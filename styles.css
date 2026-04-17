@@ -223,17 +223,18 @@ select {
 }
 
 .box.selected {
-  background: #eb8a24;
+  background: var(--motif-red);
   border-color: #ffffff;
-  box-shadow: inset 0 -2px 0 color-mix(in srgb, #be6110 70%, black 30%);
+  box-shadow: inset 0 -2px 0 color-mix(in srgb, #a2000d 70%, black 30%);
 }
 
 .box.selected::after {
   content: "✓";
   color: #fff;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 900;
   line-height: 1;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+  text-shadow: none;
 }
 
 .box.allowed.pos-1 { background: #27c89f; }
@@ -308,6 +309,14 @@ summary {
   .slider-row {
     grid-template-columns: 1fr;
     gap: 6px;
+  }
+
+  .slider-row .trait {
+    justify-self: start;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .slider-scale {
