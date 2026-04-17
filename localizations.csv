@@ -7,6 +7,8 @@ europeFrench,meta,lang,,fr
 europeFrench,meta,regionLabel,,Europe (Français)
 europeGerman,meta,lang,,de
 europeGerman,meta,regionLabel,,Europe (Deutsch)
+pal,meta,lang,,en
+pal,meta,regionLabel,,PAL
 australia,meta,lang,,en
 australia,meta,regionLabel,,Australia / New Zealand
 japan,meta,lang,,ja
@@ -122,6 +124,42 @@ europeEnglish,personalities,rogue,name,Individualist
 europeEnglish,personalities,rogue,inGameName,Individualist
 europeEnglish,personalities,maverick,name,Headstrong
 europeEnglish,personalities,maverick,inGameName,Headstrong
+pal,groups,easygoing,,Easy-Going
+pal,groups,energetic,,Energetic
+pal,groups,reserved,,Reserved
+pal,groups,confident,,Confident
+pal,personalities,sweetie,name,Softie
+pal,personalities,sweetie,inGameName,Softie
+pal,personalities,charmer,name,Charmer
+pal,personalities,charmer,inGameName,Charmer
+pal,personalities,strategist,name,Patient
+pal,personalities,strategist,inGameName,Patient
+pal,personalities,achiever,name,Busy Bee
+pal,personalities,achiever,inGameName,Busy Bee
+pal,personalities,buddy,name,Carer
+pal,personalities,buddy,inGameName,Carer
+pal,personalities,goGetter,name,Adventurer
+pal,personalities,goGetter,inGameName,Adventurer
+pal,personalities,cheerleader,name,Optimist
+pal,personalities,cheerleader,inGameName,Optimist
+pal,personalities,merrymaker,name,Bubbly
+pal,personalities,merrymaker,inGameName,Bubbly
+pal,personalities,daydreamer,name,Dreamer
+pal,personalities,daydreamer,inGameName,Dreamer
+pal,personalities,dynamo,name,Hot-Blooded
+pal,personalities,dynamo,inGameName,Hot-Blooded
+pal,personalities,perfectionist,name,Perfectionist
+pal,personalities,perfectionist,inGameName,Perfectionist
+pal,personalities,visionary,name,Leader
+pal,personalities,visionary,inGameName,Leader
+pal,personalities,observer,name,Introvert
+pal,personalities,observer,inGameName,Introvert
+pal,personalities,thinker,name,Thinker
+pal,personalities,thinker,inGameName,Thinker
+pal,personalities,rogue,name,Individualist
+pal,personalities,rogue,inGameName,Individualist
+pal,personalities,maverick,name,Headstrong
+pal,personalities,maverick,inGameName,Headstrong
 europeFrench,ui,pageSubtitle,,Choisis une personnalité puis ajuste les curseurs correspondants.
 europeFrench,ui,regionLabel,,Région
 europeFrench,ui,personalityLabel,,Personnalité cible
