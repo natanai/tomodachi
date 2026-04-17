@@ -216,6 +216,16 @@ summary {
   color: #1f2e3d;
 }
 
+.honesty-note {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px dashed #c9952a;
+  background: #fff6dc;
+  color: #5d4400;
+  font-size: 0.95rem;
+}
+
 .breakdown {
   position: relative;
   overflow: hidden;

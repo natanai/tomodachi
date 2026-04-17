@@ -1,51 +1,68 @@
-const BANDS = [
+const LEGACY_BANDS = [
   [0, 3],
   [4, 7],
   [8, 11],
   [12, 15]
 ];
 
-const BAND_LABELS = ['0–3', '4–7', '8–11', '12–15'];
+const LEGACY_BAND_LABELS = ['0–3', '4–7', '8–11', '12–15'];
 
-const PERSONALITY_GRID = [
+// Legacy inferred 4x4 cell layout from older-series reverse engineering.
+// This is useful for narrowing builds, but is not yet validated as exact for the current game.
+const LEGACY_MODEL_GRID = [
   ['observer', 'thinker', 'rogue', 'maverick'],
   ['strategist', 'perfectionist', 'achiever', 'visionary'],
   ['buddy', 'daydreamer', 'charmer', 'goGetter'],
   ['sweetie', 'cheerleader', 'merrymaker', 'dynamo']
 ];
 
-const SLIDER_MAPPED_VALUES = {
+// Visible 1-8 slider positions mapped onto inferred hidden legacy-model values.
+const LEGACY_SLIDER_MAPPED_VALUES = {
   movement: [0, 1, 2, 3, 4, 5, 6, 7],
   speech: [0, 1, 2, 3, 5, 6, 7, 8],
-  energy: [0, 1, 2, 3, 4, 5, 6, 7],
+  expressiveness: [0, 1, 2, 3, 4, 5, 6, 7],
   attitude: [0, 1, 2, 3, 5, 6, 7, 8],
   overall: [0, 1, 2, 3, 4, 5, 6, 7]
 };
 
+const MODEL_MODES = {
+  legacyInferred: {
+    key: 'legacyInferred',
+    label: 'Legacy inferred model',
+    validationStatus: 'notValidatedCurrentGame'
+  }
+};
+
+const ACTIVE_MODEL_MODE = MODEL_MODES.legacyInferred;
+
 const BASE_EN_UI = {
   pageTitle: 'Tomodachi Life Mii Personality Planner',
-  pageSubtitle: 'Pick a personality, then build sliders that match it.',
+  pageSubtitle: 'Pick an inferred personality cell, then explore slider builds that fit the legacy model.',
   regionLabel: 'Region',
-  personalityLabel: 'Target personality',
-  hintText: 'Click a number to select it. Grayed-out options can’t be used for this target.',
+  personalityLabel: 'Target inferred personality cell',
+  hintText: 'Click a number to select it. Grayed-out options are impossible under the legacy inferred model.',
   slidersHeading: 'Set your sliders',
-  resultHeading: 'Result',
-  currentResultLabel: 'Current result:',
-  currentResultEmpty: 'Select Movement, Speech, Energy, and Attitude to see your result.',
+  resultHeading: 'Inferred result',
+  currentResultLabel: 'Legacy-model cell:',
+  currentResultEmpty: 'Select Movement, Speech, Expressiveness, and Attitude to infer a legacy-model cell.',
+  resultStatusLabel: 'Status:',
+  resultStatusText: 'Not yet validated against current Tomodachi Life internals.',
+  honestyNote: 'This planner uses an older inferred band model from previous games. Current-game wording may differ, multiple slider builds can land in the same hidden cell, and cell-to-name mapping is still being validated.',
   msSumLabel: 'Movement + Speech sum:',
-  eaSumLabel: 'Energy + Attitude sum:',
+  eaSumLabel: 'Expressiveness + Attitude sum:',
   msRangeLabel: 'Target Movement + Speech range:',
-  eaRangeLabel: 'Target Energy + Attitude range:',
+  eaRangeLabel: 'Target Expressiveness + Attitude range:',
   totalBuildsLabel: 'Total valid builds (including Overall):',
   msPairsSummary: 'Show valid Movement/Speech pairs',
-  eaPairsSummary: 'Show valid Energy/Attitude pairs',
-  rangeText: 'Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}.',
+  eaPairsSummary: 'Show valid Expressiveness/Attitude pairs',
+  rangeText: 'Legacy-model target bands: Movement + Speech {ms}, Expressiveness + Attitude {ea}.',
   combinationsText: '{count} combinations',
   pairTitleMs: 'Movement + Speech',
-  pairTitleEa: 'Energy + Attitude',
+  pairTitleEa: 'Expressiveness + Attitude',
   pairText: '{title} pairs ({count}):',
-  resultText: '{name} — {group}{matchSuffix}',
-  resultMatchSuffix: ' (matches target)'
+  resultText: '{legacyGroup} / {cellLabel}',
+  inferredNameText: 'Inferred legacy-model label: {name}{matchSuffix}',
+  resultMatchSuffix: ' (matches selected target cell)'
 };
 
 const BASE_EN_GROUPS = {
@@ -58,9 +75,9 @@ const BASE_EN_GROUPS = {
 const BASE_EN_SLIDERS = {
   movement: ['Movement', 'Slow', 'Quick'],
   speech: ['Speech', 'Polite', 'Direct'],
-  energy: ['Energy', 'Flat', 'Intense'],
+  expressiveness: ['Expressiveness (legacy-model axis)', 'Flat', 'Intense'],
   attitude: ['Attitude', 'Serious', 'Relaxed'],
-  overall: ['Overall', 'Normal', 'Quirky']
+  overall: ['Overall', 'Quirky', 'Normal']
 };
 
 const BASE_PERSONALITIES = {
@@ -107,7 +124,15 @@ function createEnglishRegion(code, regionLabel, overrides = {}) {
 }
 
 const REGIONS = {
-  northAmerica: createEnglishRegion('northAmerica', 'North America'),
+  northAmerica: createEnglishRegion('northAmerica', 'North America', {
+    sliderLabels: {
+      movement: ['Movement', 'Slow', 'Quick'],
+      speech: ['Speech', 'Polite', 'Honest'],
+      expressiveness: ['Energy', 'Flat', 'Varied'],
+      attitude: ['Thinking', 'Serious', 'Chill'],
+      overall: ['Overall', 'Normal', 'Quirky']
+    }
+  }),
   europeEnglish: createEnglishRegion('europeEnglish', 'Europe (English)', {
     personalities: {
       sweetie: { name: 'Softie', inGameName: 'Softie' },
@@ -133,8 +158,8 @@ const REGIONS = {
       personalityLabel: 'Personnalité cible',
       slidersHeading: 'Réglez vos curseurs',
       resultHeading: 'Résultat',
-      currentResultLabel: 'Résultat actuel :',
-      currentResultEmpty: 'Choisissez Mouvement, Parole, Énergie et Attitude pour voir le résultat.',
+      currentResultLabel: 'Cellule du modèle hérité :',
+      currentResultEmpty: 'Choisissez Mouvement, Parole, Expressivité et Attitude pour déduire une cellule.',
       combinationsText: '{count} combinaisons',
       pairText: 'Paires {title} ({count}) :',
       resultMatchSuffix: ' (correspond à la cible)'
@@ -156,8 +181,8 @@ const REGIONS = {
       personalityLabel: 'Ziel-Persönlichkeit',
       slidersHeading: 'Regler einstellen',
       resultHeading: 'Ergebnis',
-      currentResultLabel: 'Aktuelles Ergebnis:',
-      currentResultEmpty: 'Wähle Bewegung, Sprechweise, Energie und Haltung für ein Ergebnis.',
+      currentResultLabel: 'Legacy-Modell-Zelle:',
+      currentResultEmpty: 'Wähle Bewegung, Sprechweise, Ausdruck und Haltung, um eine Modell-Zelle abzuleiten.',
       combinationsText: '{count} Kombinationen',
       pairText: '{title}-Paare ({count}):',
       resultMatchSuffix: ' (passt zum Ziel)'
@@ -183,28 +208,32 @@ const REGIONS = {
     regionLabel: '日本',
     ui: {
       pageTitle: 'トモダチコレクション 新生活 性格プランナー',
-      pageSubtitle: '性格を選んで、条件に合うスライダーを作成しましょう。',
+      pageSubtitle: '推定セルを選び、旧モデルに合うスライダー構成を探しましょう。',
       regionLabel: '地域',
-      personalityLabel: '目標の性格',
-      hintText: '数字を押して選択します。グレーの数字はこの目標では使えません。',
+      personalityLabel: '目標（推定セル）',
+      hintText: '数字を押して選択します。グレーは旧推定モデル上で不可能な値です。',
       slidersHeading: 'スライダー設定',
-      resultHeading: '結果',
-      currentResultLabel: '現在の結果：',
-      currentResultEmpty: '動き・話し方・感情・考え方を選ぶと結果が表示されます。',
+      resultHeading: '推定結果',
+      currentResultLabel: '旧モデルのセル：',
+      currentResultEmpty: '動き・話し方・表現・考え方を選ぶと旧モデルの推定セルが表示されます。',
+      resultStatusLabel: 'ステータス：',
+      resultStatusText: '現行ゲーム内部との対応は未検証です。',
+      honestyNote: 'このツールは過去作由来の推定バンドモデルを使用しています。現行作の文言は異なる可能性があり、同じ隠しセルに複数の組み合わせが入ることがあります。セルと名称の対応は検証中です。',
       msSumLabel: '動き + 話し方 の合計：',
-      eaSumLabel: '感情 + 考え方 の合計：',
+      eaSumLabel: '表現 + 考え方 の合計：',
       msRangeLabel: '目標の 動き + 話し方 範囲：',
-      eaRangeLabel: '目標の 感情 + 考え方 範囲：',
+      eaRangeLabel: '目標の 表現 + 考え方 範囲：',
       totalBuildsLabel: '有効な組み合わせ数（全体含む）：',
       msPairsSummary: '有効な動き/話し方の組を表示',
-      eaPairsSummary: '有効な感情/考え方の組を表示',
-      rangeText: '目標範囲：動き + 話し方 {ms}、感情 + 考え方 {ea}。',
+      eaPairsSummary: '有効な表現/考え方の組を表示',
+      rangeText: '旧モデル目標帯：動き + 話し方 {ms}、表現 + 考え方 {ea}。',
       combinationsText: '{count} 通り',
       pairTitleMs: '動き + 話し方',
-      pairTitleEa: '感情 + 考え方',
+      pairTitleEa: '表現 + 考え方',
       pairText: '{title}の組み合わせ（{count}）:',
-      resultText: '{name} — {group}{matchSuffix}',
-      resultMatchSuffix: '（目標と一致）'
+      resultText: '{legacyGroup} / {cellLabel}',
+      inferredNameText: '旧モデル推定ラベル：{name}{matchSuffix}',
+      resultMatchSuffix: '（選択セルと一致）'
     },
     groups: {
       easygoing: 'のんびり',
@@ -215,9 +244,9 @@ const REGIONS = {
     sliderLabels: {
       movement: ['動き', 'ゆっくり', 'すばやい'],
       speech: ['話し方', 'ていねい', 'はっきり'],
-      energy: ['感情', 'おだやか', 'はげしい'],
+      expressiveness: ['表現（旧モデル軸）', 'おだやか', 'はげしい'],
       attitude: ['考え方', 'まじめ', 'のびのび'],
-      overall: ['全体', 'ふつう', '個性的']
+      overall: ['全体', '個性的', 'ふつう']
     },
     personalities: {
       sweetie: { name: 'やさしい', inGameName: 'やさしい', description: '感受性が高く、まわりの気持ちに寄りそうタイプ。', color: '#f2cf62' },
@@ -245,12 +274,15 @@ const REGIONS = {
     ui: {
       ...BASE_EN_UI,
       pageTitle: '미 톰오다치 라이프 성격 플래너',
-      pageSubtitle: '성격을 고른 뒤 슬라이더를 맞춰 보세요.',
+      pageSubtitle: '추정 성격 셀을 고른 뒤 레거시 모델 기준으로 슬라이더를 맞춰 보세요.',
       regionLabel: '지역',
-      personalityLabel: '목표 성격',
+      personalityLabel: '목표(추정 셀)',
       slidersHeading: '슬라이더 설정',
-      resultHeading: '결과',
-      currentResultLabel: '현재 결과:',
+      resultHeading: '추정 결과',
+      currentResultLabel: '레거시 모델 셀:',
+      resultStatusLabel: '상태:',
+      resultStatusText: '레거시 모델 기반 추정치이며 현재 게임 내부 로직으로 검증되지 않았습니다.',
+      honestyNote: '이 플래너는 과거 작품에서 추론된 밴드 모델을 사용합니다. 현재 게임의 표기와 다를 수 있고, 여러 슬라이더 조합이 같은 숨은 셀에 매핑될 수 있으며, 셀-이름 대응은 검증 중입니다.',
       combinationsText: '{count}개 조합',
       pairText: '{title} 조합 ({count}):',
       resultMatchSuffix: ' (목표와 일치)'
@@ -264,9 +296,9 @@ const REGIONS = {
     sliderLabels: {
       movement: ['움직임', '느림', '빠름'],
       speech: ['말투', '공손', '직설'],
-      energy: ['에너지', '차분', '강함'],
+      expressiveness: ['표현력(레거시 축)', '차분', '강함'],
       attitude: ['태도', '진지', '느긋'],
-      overall: ['전체', '보통', '개성']
+      overall: ['전체', '개성', '보통']
     },
     personalities: deepMerge(BASE_PERSONALITIES, {
       sweetie: { name: '다정형', inGameName: '다정형' },
@@ -277,12 +309,12 @@ const REGIONS = {
   }
 };
 
-const SLIDER_KEYS = ['movement', 'speech', 'energy', 'attitude', 'overall'];
+const SLIDER_KEYS = ['movement', 'speech', 'expressiveness', 'attitude', 'overall'];
 
 const picks = {
   movement: null,
   speech: null,
-  energy: null,
+  expressiveness: null,
   attitude: null,
   overall: null
 };
@@ -302,6 +334,8 @@ const eaRangeEl = document.getElementById('eaRange');
 const totalBuildsEl = document.getElementById('totalBuilds');
 const msPairsEl = document.getElementById('msPairs');
 const eaPairsEl = document.getElementById('eaPairs');
+const resultStatusEl = document.getElementById('resultStatus');
+const honestyNoteEl = document.getElementById('honestyNote');
 
 function initialize() {
   renderRegionOptions();
@@ -346,6 +380,9 @@ function renderStaticText() {
   document.getElementById('slidersHeading').textContent = ui.slidersHeading;
   document.getElementById('resultHeading').textContent = ui.resultHeading;
   document.getElementById('currentResultLabel').textContent = ui.currentResultLabel;
+  document.getElementById('resultStatusLabel').textContent = ui.resultStatusLabel;
+  resultStatusEl.textContent = ui.resultStatusText;
+  honestyNoteEl.textContent = ui.honestyNote;
   document.getElementById('msSumLabel').textContent = ui.msSumLabel;
   document.getElementById('eaSumLabel').textContent = ui.eaSumLabel;
   document.getElementById('msRangeLabel').textContent = ui.msRangeLabel;
@@ -354,6 +391,7 @@ function renderStaticText() {
   document.getElementById('msPairsSummary').textContent = ui.msPairsSummary;
   document.getElementById('eaPairsSummary').textContent = ui.eaPairsSummary;
   currentResultEl.textContent = ui.currentResultEmpty;
+  currentResultEl.className = '';
 }
 
 function populatePersonalityOptions() {
@@ -381,20 +419,28 @@ function populatePersonalityOptions() {
 
 function buildGoals(region) {
   const built = [];
-  for (let row = 0; row < PERSONALITY_GRID.length; row += 1) {
-    for (let col = 0; col < PERSONALITY_GRID[row].length; col += 1) {
-      const personalityKey = PERSONALITY_GRID[row][col];
+  for (let row = 0; row < LEGACY_MODEL_GRID.length; row += 1) {
+    for (let col = 0; col < LEGACY_MODEL_GRID[row].length; col += 1) {
+      const personalityKey = LEGACY_MODEL_GRID[row][col];
       const detail = region.personalities[personalityKey];
+      const legacyGroupKey = getGroupKey(row, col);
       built.push({
         id: built.length,
         name: detail.name,
-        groupKey: getGroupKey(row, col),
-        msBand: BANDS[col],
-        eaBand: BANDS[row],
-        msBandLabel: BAND_LABELS[col],
-        eaBandLabel: BAND_LABELS[row],
+        groupKey: legacyGroupKey,
+        msBand: LEGACY_BANDS[col],
+        eaBand: LEGACY_BANDS[row],
+        msBandLabel: LEGACY_BAND_LABELS[col],
+        eaBandLabel: LEGACY_BAND_LABELS[row],
         detail,
-        personalityKey
+        personalityKey,
+        modelMode: ACTIVE_MODEL_MODE.key,
+        legacyCellId: `r${row}c${col}`,
+        legacyGroup: region.groups[legacyGroupKey],
+        inferredCurrentName: detail.inGameName || detail.name,
+        inGameName: detail.inGameName || '',
+        confidence: detail.confidence || 'hypothesis',
+        validationStatus: detail.validationStatus || ACTIVE_MODEL_MODE.validationStatus
       });
     }
   }
@@ -416,11 +462,11 @@ function render() {
   sanitizeInvalidPicks(goal);
 
   const msPairs = buildMappedPairs('movement', 'speech', goal.msBand[0], goal.msBand[1]);
-  const eaPairs = buildMappedPairs('energy', 'attitude', goal.eaBand[0], goal.eaBand[1]);
+  const eaPairs = buildMappedPairs('expressiveness', 'attitude', goal.eaBand[0], goal.eaBand[1]);
 
   goalBandsEl.innerHTML = `
     <span class="personality-title" style="--personality-color: ${goal.detail.color};">${goal.name}</span>
-    <span class="personality-subtitle">${goal.detail.inGameName}</span>
+    <span class="personality-subtitle">${format(currentRegion.ui.inferredNameText, { name: goal.inferredCurrentName, matchSuffix: '' })}</span>
     <span>${goal.detail.description}</span>
     <span class="personality-range">${format(currentRegion.ui.rangeText, { ms: goal.msBandLabel, ea: goal.eaBandLabel })}</span>
   `;
@@ -522,10 +568,10 @@ function isAllowedForGoal(key, value, goal) {
       if (ms < goal.msBand[0] || ms > goal.msBand[1]) continue;
 
       for (let e = 1; e <= 8; e += 1) {
-        if (draft.energy !== null && draft.energy !== e) continue;
+        if (draft.expressiveness !== null && draft.expressiveness !== e) continue;
         for (let a = 1; a <= 8; a += 1) {
           if (draft.attitude !== null && draft.attitude !== a) continue;
-          const ea = mappedValue('energy', e) + mappedValue('attitude', a);
+          const ea = mappedValue('expressiveness', e) + mappedValue('attitude', a);
           if (ea >= goal.eaBand[0] && ea <= goal.eaBand[1]) return true;
         }
       }
@@ -536,15 +582,15 @@ function isAllowedForGoal(key, value, goal) {
 
 function renderCurrentResult(goal) {
   const hasMs = picks.movement !== null && picks.speech !== null;
-  const hasEa = picks.energy !== null && picks.attitude !== null;
+  const hasEa = picks.expressiveness !== null && picks.attitude !== null;
 
   const movementMapped = hasMs ? mappedValue('movement', picks.movement) : null;
   const speechMapped = hasMs ? mappedValue('speech', picks.speech) : null;
-  const energyMapped = hasEa ? mappedValue('energy', picks.energy) : null;
+  const expressivenessMapped = hasEa ? mappedValue('expressiveness', picks.expressiveness) : null;
   const attitudeMapped = hasEa ? mappedValue('attitude', picks.attitude) : null;
 
   msSumEl.textContent = hasMs ? `${movementMapped + speechMapped}` : '—';
-  eaSumEl.textContent = hasEa ? `${energyMapped + attitudeMapped}` : '—';
+  eaSumEl.textContent = hasEa ? `${expressivenessMapped + attitudeMapped}` : '—';
 
   if (!hasMs || !hasEa) {
     currentResultEl.textContent = currentRegion.ui.currentResultEmpty;
@@ -553,29 +599,34 @@ function renderCurrentResult(goal) {
   }
 
   const msBand = findBandIndex(movementMapped + speechMapped);
-  const eaBand = findBandIndex(energyMapped + attitudeMapped);
-  const personalityKey = PERSONALITY_GRID[eaBand][msBand];
+  const eaBand = findBandIndex(expressivenessMapped + attitudeMapped);
+  const personalityKey = LEGACY_MODEL_GRID[eaBand][msBand];
   const result = currentRegion.personalities[personalityKey];
   const resultGroup = currentRegion.groups[getGroupKey(eaBand, msBand)];
   const matchesGoal = personalityKey === goal.personalityKey;
+  const cellLabel = `${LEGACY_BAND_LABELS[eaBand]} EA × ${LEGACY_BAND_LABELS[msBand]} MS`;
 
   currentResultEl.textContent = format(currentRegion.ui.resultText, {
-    name: result.name,
-    group: resultGroup,
+    legacyGroup: resultGroup,
+    cellLabel
+  });
+  const inferredName = format(currentRegion.ui.inferredNameText, {
+    name: result.inGameName || result.name,
     matchSuffix: matchesGoal ? currentRegion.ui.resultMatchSuffix : ''
   });
+  resultStatusEl.textContent = `${currentRegion.ui.resultStatusText} ${inferredName}`;
   currentResultEl.className = matchesGoal ? 'ok' : 'warn';
 }
 
 function findBandIndex(sum) {
-  for (let i = 0; i < BANDS.length; i += 1) {
-    if (sum >= BANDS[i][0] && sum <= BANDS[i][1]) return i;
+  for (let i = 0; i < LEGACY_BANDS.length; i += 1) {
+    if (sum >= LEGACY_BANDS[i][0] && sum <= LEGACY_BANDS[i][1]) return i;
   }
   return 0;
 }
 
 function mappedValue(key, visibleValue) {
-  const mapped = SLIDER_MAPPED_VALUES[key];
+  const mapped = LEGACY_SLIDER_MAPPED_VALUES[key];
   if (!mapped || visibleValue < 1 || visibleValue > 8) return 0;
   return mapped[visibleValue - 1];
 }
