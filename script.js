@@ -7,6 +7,8 @@ const BANDS = [
 
 const BAND_LABELS = ['0–3', '4–7', '8–11', '12–15'];
 
+// The personality algorithm is intentionally based on mapped internal values.
+// UI sliders now display those mapped values so the visuals match the real math.
 const PERSONALITY_GRID = [
   ['observer', 'thinker', 'rogue', 'maverick'],
   ['strategist', 'perfectionist', 'achiever', 'visionary'],
@@ -37,7 +39,9 @@ const BASE_EN_UI = {
   pairTitleEa: 'Energy + Attitude',
   pairText: '{title} pairs ({count}):',
   resultText: '{name} — {group}{matchSuffix}',
-  resultMatchSuffix: ' (matches target)'
+  resultMatchSuffix: ' (matches target)',
+  weightingNote: 'Speech and Attitude are weighted differently in the game’s personality math.',
+  overallNote: 'not used for personality'
 };
 
 const BASE_EN_GROUPS = {
@@ -202,7 +206,9 @@ const REGIONS = {
       pairTitleEa: '感情 + 考え方',
       pairText: '{title}の組み合わせ（{count}）:',
       resultText: '{name} — {group}{matchSuffix}',
-      resultMatchSuffix: '（目標と一致）'
+      resultMatchSuffix: '（目標と一致）',
+      weightingNote: '話し方と考え方は、性格計算で重みづけが異なります。',
+      overallNote: '性格判定には未使用'
     },
     groups: {
       easygoing: 'のんびり',
@@ -351,6 +357,7 @@ function renderStaticText() {
   document.getElementById('totalBuildsLabel').textContent = ui.totalBuildsLabel;
   document.getElementById('msPairsSummary').textContent = ui.msPairsSummary;
   document.getElementById('eaPairsSummary').textContent = ui.eaPairsSummary;
+  document.getElementById('weightingNote').textContent = ui.weightingNote;
   currentResultEl.textContent = ui.currentResultEmpty;
 }
 
@@ -374,7 +381,10 @@ function populatePersonalityOptions() {
     selectEl.appendChild(groupEl);
   });
 
-  selectEl.value = '0';
+  const firstOption = selectEl.querySelector('option');
+  if (firstOption) {
+    selectEl.value = firstOption.value;
+  }
 }
 
 function buildGoals(region) {
@@ -411,6 +421,7 @@ function getGroupKey(row, col) {
 
 function render() {
   const goal = goals[parseInt(selectEl.value || '0', 10)];
+  if (!goal) return;
   sanitizeInvalidPicks(goal);
 
   const msPairs = buildMappedPairs('movement', 'speech', goal.msBand[0], goal.msBand[1]);
@@ -423,8 +434,8 @@ function render() {
     <span class="personality-range">${format(currentRegion.ui.rangeText, { ms: goal.msBandLabel, ea: goal.eaBandLabel })}</span>
   `;
 
-  msRangeEl.textContent = `${goal.msBand[0]} to ${goal.msBand[1]}`;
-  eaRangeEl.textContent = `${goal.eaBand[0]} to ${goal.eaBand[1]}`;
+  msRangeEl.textContent = goal.msBandLabel;
+  eaRangeEl.textContent = goal.eaBandLabel;
   totalBuildsEl.textContent = format(currentRegion.ui.combinationsText, { count: msPairs.length * eaPairs.length * 8 });
   msPairsEl.textContent = pairLines(currentRegion.ui.pairTitleMs, msPairs);
   eaPairsEl.textContent = pairLines(currentRegion.ui.pairTitleEa, eaPairs);
@@ -434,9 +445,14 @@ function render() {
 }
 
 function renderSliders(goal) {
+  // Keep allowed/disabled logic untouched; only the button text changed to mapped values.
+  // Speech/Attitude intentionally skip internal 4 => 0,1,2,3,5,6,7,8.
   sliderGridEl.innerHTML = '';
   SLIDER_KEYS.forEach((key) => {
-    const [label, left, right] = currentRegion.sliderLabels[key];
+    const [baseLabel, left, right] = currentRegion.sliderLabels[key];
+    const label = key === 'overall'
+      ? `${baseLabel} (${currentRegion.ui.overallNote})`
+      : baseLabel;
 
     const row = document.createElement('div');
     row.className = 'slider-row';
@@ -456,8 +472,9 @@ function renderSliders(goal) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'box';
-      btn.textContent = i;
-      btn.setAttribute('aria-label', `${label} ${i}`);
+      const displayedValue = key === 'overall' ? i : mappedValue(key, i);
+      btn.textContent = displayedValue;
+      btn.setAttribute('aria-label', `${label} ${displayedValue}`);
 
       const allowed = isAllowedForGoal(key, i, goal);
       if (allowed) {
@@ -469,7 +486,6 @@ function renderSliders(goal) {
 
       if (picks[key] === i) {
         btn.classList.add('selected');
-        btn.textContent = '✓';
       }
 
       btn.addEventListener('click', () => {
@@ -573,6 +589,8 @@ function findBandIndex(sum) {
 }
 
 function mappedValue(key, visibleValue) {
+  // Mapping from visible slider positions (1..8) to internal values used by personality math.
+  // Movement/Energy map to 0..7; Speech/Attitude skip 4 and map to 0,1,2,3,5,6,7,8.
   const sliderIndex = visibleValue - 1;
   if (sliderIndex < 0 || sliderIndex > 7) return 0;
   if (key === 'speech' || key === 'attitude') {
@@ -601,3 +619,18 @@ function format(template, values) {
 }
 
 initialize();
+
+console.assert(mappedValue('speech', 1) === 0, 'speech 1 should map to 0');
+console.assert(mappedValue('speech', 5) === 5, 'speech 5 should map to 5');
+console.assert(mappedValue('speech', 8) === 8, 'speech 8 should map to 8');
+console.assert(mappedValue('attitude', 1) === 0, 'attitude 1 should map to 0');
+console.assert(mappedValue('attitude', 5) === 5, 'attitude 5 should map to 5');
+console.assert(mappedValue('movement', 1) === 0, 'movement 1 should map to 0');
+console.assert(mappedValue('movement', 5) === 4, 'movement 5 should map to 4');
+console.assert(mappedValue('energy', 8) === 7, 'energy 8 should map to 7');
+console.assert(findBandIndex(3) === 0, '3 should be in band 0');
+console.assert(findBandIndex(4) === 1, '4 should be in band 1');
+console.assert(findBandIndex(7) === 1, '7 should be in band 1');
+console.assert(findBandIndex(8) === 2, '8 should be in band 2');
+console.assert(findBandIndex(11) === 2, '11 should be in band 2');
+console.assert(findBandIndex(12) === 3, '12 should be in band 3');
