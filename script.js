@@ -25,6 +25,9 @@ const LEGACY_SLIDER_MAPPED_VALUES = {
   overall: [0, 1, 2, 3, 4, 5, 6, 7]
 };
 
+const PERSONALITY_AXIS_KEYS = ['movement', 'speech', 'expressiveness', 'attitude'];
+const ALL_SLIDER_KEYS = [...PERSONALITY_AXIS_KEYS, 'overall'];
+
 const MODEL_MODES = {
   legacyInferred: {
     key: 'legacyInferred',
@@ -35,33 +38,29 @@ const MODEL_MODES = {
 
 const ACTIVE_MODEL_MODE = MODEL_MODES.legacyInferred;
 
+// Confirmed examples include overall for complete example reconstruction in the UI.
+// Personality matching intentionally uses PERSONALITY_AXIS_KEYS only.
 const CONFIRMED_EXAMPLES = {
   northAmerica: {
-    sweetie: [{ movement: 1, speech: 1, expressiveness: 8, attitude: 8, overall: 8 }],
-    charmer: [{ movement: 5, speech: 5, expressiveness: 6, attitude: 7, overall: 8 }],
-    strategist: [{ movement: 2, speech: 2, expressiveness: 2, attitude: 3, overall: 4 }],
-    achiever: [{ movement: 6, speech: 5, expressiveness: 4, attitude: 3, overall: 2 }],
-    buddy: [{ movement: 2, speech: 3, expressiveness: 4, attitude: 5, overall: 6 }],
-    goGetter: [{ movement: 8, speech: 8, expressiveness: 8, attitude: 8, overall: 8 }],
-    perfectionist: [{ movement: 2, speech: 2, expressiveness: 2, attitude: 2, overall: 2 }],
-    visionary: [{ movement: 7, speech: 6, expressiveness: 5, attitude: 4, overall: 3 }],
-    cheerleader: [{ movement: 3, speech: 4, expressiveness: 7, attitude: 6, overall: 6 }],
-    merrymaker: [{ movement: 6, speech: 6, expressiveness: 6, attitude: 6, overall: 6 }],
-    observer: [{ movement: 1, speech: 1, expressiveness: 1, attitude: 1, overall: 1 }],
-    rogue: [{ movement: 7, speech: 6, expressiveness: 3, attitude: 4, overall: 3 }],
-    daydreamer: [{ movement: 3, speech: 4, expressiveness: 5, attitude: 6, overall: 7 }],
-    dynamo: [{ movement: 8, speech: 7, expressiveness: 6, attitude: 5, overall: 4 }],
-    thinker: [{ movement: 4, speech: 3, expressiveness: 2, attitude: 1, overall: 1 }],
-    maverick: [{ movement: 6, speech: 5, expressiveness: 1, attitude: 1, overall: 1 }]
+    sweetie: [{ personalitySliders: { movement: 1, speech: 1, expressiveness: 8, attitude: 8 }, exampleOverall: 8, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    charmer: [{ personalitySliders: { movement: 5, speech: 5, expressiveness: 6, attitude: 7 }, exampleOverall: 8, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    strategist: [{ personalitySliders: { movement: 2, speech: 2, expressiveness: 2, attitude: 3 }, exampleOverall: 4, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    achiever: [{ personalitySliders: { movement: 6, speech: 5, expressiveness: 4, attitude: 3 }, exampleOverall: 2, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    buddy: [{ personalitySliders: { movement: 2, speech: 3, expressiveness: 4, attitude: 5 }, exampleOverall: 6, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    goGetter: [{ personalitySliders: { movement: 8, speech: 8, expressiveness: 8, attitude: 8 }, exampleOverall: 8, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    perfectionist: [{ personalitySliders: { movement: 2, speech: 2, expressiveness: 2, attitude: 2 }, exampleOverall: 2, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    visionary: [{ personalitySliders: { movement: 7, speech: 6, expressiveness: 5, attitude: 4 }, exampleOverall: 3, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    cheerleader: [{ personalitySliders: { movement: 3, speech: 4, expressiveness: 7, attitude: 6 }, exampleOverall: 6, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    merrymaker: [{ personalitySliders: { movement: 6, speech: 6, expressiveness: 6, attitude: 6 }, exampleOverall: 6, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    observer: [{ personalitySliders: { movement: 1, speech: 1, expressiveness: 1, attitude: 1 }, exampleOverall: 1, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    rogue: [{ personalitySliders: { movement: 7, speech: 6, expressiveness: 3, attitude: 4 }, exampleOverall: 3, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    daydreamer: [{ personalitySliders: { movement: 3, speech: 4, expressiveness: 5, attitude: 6 }, exampleOverall: 7, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    dynamo: [{ personalitySliders: { movement: 8, speech: 7, expressiveness: 6, attitude: 5 }, exampleOverall: 4, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    thinker: [{ personalitySliders: { movement: 4, speech: 3, expressiveness: 2, attitude: 1 }, exampleOverall: 1, evidenceStatus: 'confirmedExample', source: 'community chart' }],
+    maverick: [{ personalitySliders: { movement: 6, speech: 5, expressiveness: 1, attitude: 1 }, exampleOverall: 1, evidenceStatus: 'confirmedExample', source: 'community chart' }]
   }
 };
 
-const CONFIRMED_EXAMPLE_METADATA = {
-  northAmerica: {
-    evidenceStatus: 'confirmedExample',
-    sourceNote: 'Community chart example builds.'
-  }
-};
 
 const BASE_EN_UI = {
   pageTitle: 'Tomodachi Life Mii Personality Planner',
@@ -344,8 +343,6 @@ const REGIONS = {
   }
 };
 
-const SLIDER_KEYS = ['movement', 'speech', 'expressiveness', 'attitude', 'overall'];
-
 const picks = {
   movement: null,
   speech: null,
@@ -378,7 +375,7 @@ function initialize() {
   regionSelectEl.value = 'northAmerica';
   regionSelectEl.addEventListener('change', () => {
     currentRegion = REGIONS[regionSelectEl.value] || REGIONS.northAmerica;
-    for (const key of SLIDER_KEYS) picks[key] = null;
+    for (const key of ALL_SLIDER_KEYS) picks[key] = null;
     setupForRegion();
   });
   loadExampleButtonEl.addEventListener('click', loadConfirmedExampleForCurrentGoal);
@@ -528,15 +525,16 @@ function loadConfirmedExampleForCurrentGoal() {
   const goal = goals[parseInt(selectEl.value || '0', 10)];
   const example = getConfirmedExamplesForGoal(currentRegion.code, goal.personalityKey)[0];
   if (!example) return;
-  for (const key of SLIDER_KEYS) {
-    picks[key] = example[key];
+  for (const key of PERSONALITY_AXIS_KEYS) {
+    picks[key] = example.personalitySliders[key];
   }
+  picks.overall = example.exampleOverall ?? null;
   render();
 }
 
 function renderSliders(goal) {
   sliderGridEl.innerHTML = '';
-  SLIDER_KEYS.forEach((key) => {
+  ALL_SLIDER_KEYS.forEach((key) => {
     const [label, left, right] = currentRegion.sliderLabels[key];
 
     const row = document.createElement('div');
@@ -599,7 +597,7 @@ function sanitizeInvalidPicks(goal) {
   let changed = true;
   while (changed) {
     changed = false;
-    for (const key of SLIDER_KEYS) {
+    for (const key of ALL_SLIDER_KEYS) {
       if (picks[key] === null) continue;
       if (!isAllowedForGoal(key, picks[key], goal)) {
         picks[key] = null;
@@ -610,7 +608,7 @@ function sanitizeInvalidPicks(goal) {
 }
 
 function isCompleteBuild(build) {
-  return SLIDER_KEYS.every((key) => build[key] !== null);
+  return PERSONALITY_AXIS_KEYS.every((key) => build[key] !== null);
 }
 
 function getConfirmedExamplesForGoal(regionCode, personalityKey) {
@@ -622,14 +620,14 @@ function findMatchingConfirmedExample(regionCode, build) {
   const regionalExamples = CONFIRMED_EXAMPLES[regionCode] || {};
 
   for (const [personalityKey, examples] of Object.entries(regionalExamples)) {
-    for (const sliders of examples) {
-      const matches = SLIDER_KEYS.every((key) => sliders[key] === build[key]);
+    for (const example of examples) {
+      const matches = PERSONALITY_AXIS_KEYS.every((key) => example.personalitySliders[key] === build[key]);
       if (matches) {
         return {
           personalityKey,
-          sliders,
-          evidenceStatus: CONFIRMED_EXAMPLE_METADATA[regionCode]?.evidenceStatus || 'confirmedExample',
-          sourceNote: CONFIRMED_EXAMPLE_METADATA[regionCode]?.sourceNote || ''
+          exampleOverall: example.exampleOverall ?? null,
+          evidenceStatus: example.evidenceStatus || 'confirmedExample',
+          sourceNote: example.source || ''
         };
       }
     }

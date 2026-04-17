@@ -11,3 +11,4 @@ This planner currently uses a **legacy inferred personality-band model** (the ol
 - Current-game personality wording/mapping is still under validation and is shown as inferred where applicable.
 - For builds without confirmed observations, the planner still relies on the legacy inferred model for exploration.
 - Confirmed examples prove those exact builds work, but they are not treated as exhaustive or unique.
+- Overall is preserved in example builds for UI parity, but personality matching assumes Overall does not change personality outcome.
