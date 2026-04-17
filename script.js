@@ -99,7 +99,13 @@ function createEnglishRegion(code, regionLabel, overrides = {}) {
 }
 
 const REGIONS = {
-  northAmerica: createEnglishRegion('northAmerica', 'North America'),
+  northAmerica: createEnglishRegion('northAmerica', 'North America', {
+    sliderLabels: {
+      speech: ['Speech', 'Polite', 'Honest'],
+      energy: ['Energy', 'Flat', 'Varied'],
+      attitude: ['Thinking', 'Serious', 'Chill']
+    }
+  }),
   europeEnglish: createEnglishRegion('europeEnglish', 'Europe (English)', {
     personalities: {
       sweetie: { name: 'Softie', inGameName: 'Softie' },
