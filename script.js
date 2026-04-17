@@ -31,7 +31,7 @@ const BASE_EN_UI = {
   rangeText: 'Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}.',
   resultText: '{name} — {group}{matchSuffix}',
   resultMatchSuffix: ' (matches target)',
-  weightingNote: 'Speech and Attitude are weighted differently in the game’s personality math.',
+  weightingNote: 'As you make selections, invalid options for the selected target personality will be grayed out.',
   overallNote: 'not used for personality'
 };
 
