@@ -127,6 +127,11 @@ select {
 }
 
 .hint { margin-top: 2px; color: #555; }
+.weighting-note {
+  margin: 0 0 10px;
+  color: #4b4b4b;
+  font-size: 0.92rem;
+}
 
 .slider-grid { display: grid; gap: 12px; }
 
