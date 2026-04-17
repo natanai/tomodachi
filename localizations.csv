@@ -27,7 +27,7 @@ northAmerica,ui,currentResultEmpty,,Select Movement, Speech, Energy, and Attitud
 northAmerica,ui,rangeText,,Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}.
 northAmerica,ui,resultText,,{name} — {group}{matchSuffix}
 northAmerica,ui,resultMatchSuffix,, (matches target)
-northAmerica,ui,weightingNote,,Speech and Attitude are weighted differently in the game’s personality math.
+northAmerica,ui,weightingNote,,As you make selections, invalid options for the selected target personality will be grayed out.
 northAmerica,ui,overallNote,,not used for personality
 northAmerica,groups,easygoing,,Considerate
 northAmerica,groups,energetic,,Outgoing
@@ -175,7 +175,7 @@ japan,ui,currentResultLabel,,現在の結果：
 japan,ui,currentResultEmpty,,動き・話し方・感情・考え方を選ぶと結果が表示されます。
 japan,ui,rangeText,,目標範囲：動き + 話し方 {ms}、感情 + 考え方 {ea}。
 japan,ui,resultMatchSuffix,,（目標と一致）
-japan,ui,weightingNote,,話し方と考え方は 性格計算で重みづけが異なります。
+japan,ui,weightingNote,,選択を進めると、目標の性格に合わない選択肢はグレーアウトされます。
 japan,ui,overallNote,,性格判定には未使用
 japan,groups,easygoing,,のんびり
 japan,groups,energetic,,アクティブ
