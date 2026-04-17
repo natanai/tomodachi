@@ -1,0 +1,233 @@
+region,category,key,subkey,value
+northAmerica,meta,lang,,en
+northAmerica,meta,regionLabel,,North America
+europeEnglish,meta,lang,,en
+europeEnglish,meta,regionLabel,,Europe (English)
+europeFrench,meta,lang,,fr
+europeFrench,meta,regionLabel,,Europe (Français)
+europeGerman,meta,lang,,de
+europeGerman,meta,regionLabel,,Europe (Deutsch)
+australia,meta,lang,,en
+australia,meta,regionLabel,,Australia / New Zealand
+japan,meta,lang,,ja
+japan,meta,regionLabel,,日本
+southKorea,meta,lang,,ko
+southKorea,meta,regionLabel,,대한민국
+northAmerica,ui,pageTitle,,Tomodachi Life Mii Personality Planner
+northAmerica,ui,pageSubtitle,,Pick a personality, then build sliders that match it.
+northAmerica,ui,regionLabel,,Region
+northAmerica,ui,personalityLabel,,Target personality
+northAmerica,ui,freePlacementOption,,Place Freely
+northAmerica,ui,freePlacementDescription,,No target restrictions. Pick any slider values to see the resulting personality.
+northAmerica,ui,hintText,,
+northAmerica,ui,slidersHeading,,Set your sliders
+northAmerica,ui,resultHeading,,Result
+northAmerica,ui,currentResultLabel,,Current result:
+northAmerica,ui,currentResultEmpty,,Select Movement, Speech, Energy, and Attitude to see your result.
+northAmerica,ui,rangeText,,Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}.
+northAmerica,ui,resultText,,{name} — {group}{matchSuffix}
+northAmerica,ui,resultMatchSuffix,, (matches target)
+northAmerica,ui,weightingNote,,Speech and Attitude are weighted differently in the game’s personality math.
+northAmerica,ui,overallNote,,not used for personality
+northAmerica,groups,easygoing,,Considerate
+northAmerica,groups,energetic,,Outgoing
+northAmerica,groups,reserved,,Reserved
+northAmerica,groups,confident,,Ambitious
+northAmerica,sliderLabels,movement,label,Movement
+northAmerica,sliderLabels,movement,left,Slow
+northAmerica,sliderLabels,movement,right,Quick
+northAmerica,sliderLabels,speech,label,Speech
+northAmerica,sliderLabels,speech,left,Polite
+northAmerica,sliderLabels,speech,right,Honest
+northAmerica,sliderLabels,energy,label,Energy
+northAmerica,sliderLabels,energy,left,Flat
+northAmerica,sliderLabels,energy,right,Varied
+northAmerica,sliderLabels,attitude,label,Thinking
+northAmerica,sliderLabels,attitude,left,Serious
+northAmerica,sliderLabels,attitude,right,Chill
+northAmerica,sliderLabels,overall,label,Overall
+northAmerica,sliderLabels,overall,left,Normal
+northAmerica,sliderLabels,overall,right,Quirky
+northAmerica,personalities,sweetie,name,Sweetie
+northAmerica,personalities,sweetie,inGameName,Softie (Sweetie)
+northAmerica,personalities,sweetie,description,Sensitive emotional and in tune with the feelings of those around them. Empathetic and sentimental.
+northAmerica,personalities,charmer,name,Charmer
+northAmerica,personalities,charmer,inGameName,Charmer
+northAmerica,personalities,charmer,description,Radiant and always on form. Their effortless style is admired by all. Easily adapts to new situations.
+northAmerica,personalities,strategist,name,Strategist
+northAmerica,personalities,strategist,inGameName,Patient (Strategist)
+northAmerica,personalities,strategist,description,Unique carefree and creative. Always thinks way outside the box without worrying what others think.
+northAmerica,personalities,achiever,name,Achiever
+northAmerica,personalities,achiever,inGameName,Busy Bee (Achiever)
+northAmerica,personalities,achiever,description,Diligent productive and highly efficient. An excellent planner who always follows through.
+northAmerica,personalities,buddy,name,Buddy
+northAmerica,personalities,buddy,inGameName,Carer (Buddy)
+northAmerica,personalities,buddy,description,Trustworthy and considerate. Puts their friends first and works hard to make sure everyone gets along.
+northAmerica,personalities,goGetter,name,Go-Getter
+northAmerica,personalities,goGetter,inGameName,Adventurer (Go-Getter)
+northAmerica,personalities,goGetter,description,Bold and captivating. Their wit and charm lights up a room. It's never a dull moment when they're around!
+northAmerica,personalities,cheerleader,name,Cheerleader
+northAmerica,personalities,cheerleader,inGameName,Optimist (Cheerleader)
+northAmerica,personalities,cheerleader,description,Positive enthusiastic and always smiling. Smiles not only for their own sake but to help others smile too.
+northAmerica,personalities,merrymaker,name,Merrymaker
+northAmerica,personalities,merrymaker,inGameName,Bubbly (Merrymaker)
+northAmerica,personalities,merrymaker,description,Outgoing and pleasant to be around. Makes friends easily and finds the silver lining to any bad situation.
+northAmerica,personalities,daydreamer,name,Daydreamer
+northAmerica,personalities,daydreamer,inGameName,Dreamer (Daydreamer)
+northAmerica,personalities,daydreamer,description,Idealistic and romantic. Often has their head in the clouds but finds a lot of great ideas up there.
+northAmerica,personalities,dynamo,name,Dynamo
+northAmerica,personalities,dynamo,inGameName,Hot-Blooded (Dynamo)
+northAmerica,personalities,dynamo,description,Assertive and highly regarded. Trusts their instincts and easily commands the respect of others.
+northAmerica,personalities,perfectionist,name,Perfectionist
+northAmerica,personalities,perfectionist,inGameName,Perfectionist
+northAmerica,personalities,perfectionist,description,Imaginative and inspired. Happiest when creating something. Finds beauty in even the smallest details.
+northAmerica,personalities,visionary,name,Visionary
+northAmerica,personalities,visionary,inGameName,Leader (Visionary)
+northAmerica,personalities,visionary,description,Ambitious and takes risks. Full of energy and does things on a whim. A force to be reckoned with.
+northAmerica,personalities,observer,name,Observer
+northAmerica,personalities,observer,inGameName,Introvert (Observer)
+northAmerica,personalities,observer,description,Self-sufficient and highly individual. Doesn't let their emotions show but has a lot going on deep down.
+northAmerica,personalities,thinker,name,Thinker
+northAmerica,personalities,thinker,inGameName,Thinker
+northAmerica,personalities,thinker,description,Thoughtful and introspective. Great at thinking things through and analysing from every angle.
+northAmerica,personalities,rogue,name,Rogue
+northAmerica,personalities,rogue,inGameName,Individualist (Rogue)
+northAmerica,personalities,rogue,description,Intelligent and not afraid to show it. Knowledgeable in a wide range of subjects. Speaks with confidence.
+northAmerica,personalities,maverick,name,Maverick
+northAmerica,personalities,maverick,inGameName,Headstrong (Maverick)
+northAmerica,personalities,maverick,description,A determined self-starter. Cuts their own path letting nothing stand in their way. Quick to execute plans.
+europeEnglish,personalities,sweetie,name,Softie
+europeEnglish,personalities,sweetie,inGameName,Softie
+europeEnglish,personalities,strategist,name,Free Spirit
+europeEnglish,personalities,strategist,inGameName,Free Spirit
+europeEnglish,personalities,achiever,name,Busy Bee
+europeEnglish,personalities,achiever,inGameName,Busy Bee
+europeEnglish,personalities,buddy,name,Carer
+europeEnglish,personalities,buddy,inGameName,Carer
+europeEnglish,personalities,goGetter,name,Adventurer
+europeEnglish,personalities,goGetter,inGameName,Adventurer
+europeEnglish,personalities,cheerleader,name,Optimist
+europeEnglish,personalities,cheerleader,inGameName,Optimist
+europeEnglish,personalities,merrymaker,name,Bubbly
+europeEnglish,personalities,merrymaker,inGameName,Bubbly
+europeEnglish,personalities,daydreamer,name,Dreamer
+europeEnglish,personalities,daydreamer,inGameName,Dreamer
+europeEnglish,personalities,dynamo,name,Hot-Blooded
+europeEnglish,personalities,dynamo,inGameName,Hot-Blooded
+europeEnglish,personalities,visionary,name,Leader
+europeEnglish,personalities,visionary,inGameName,Leader
+europeEnglish,personalities,observer,name,Introvert
+europeEnglish,personalities,observer,inGameName,Introvert
+europeEnglish,personalities,rogue,name,Individualist
+europeEnglish,personalities,rogue,inGameName,Individualist
+europeEnglish,personalities,maverick,name,Headstrong
+europeEnglish,personalities,maverick,inGameName,Headstrong
+europeFrench,ui,pageSubtitle,,Choisis une personnalité puis ajuste les curseurs correspondants.
+europeFrench,ui,regionLabel,,Région
+europeFrench,ui,personalityLabel,,Personnalité cible
+europeFrench,ui,slidersHeading,,Réglez vos curseurs
+europeFrench,ui,resultHeading,,Résultat
+europeFrench,ui,currentResultLabel,,Résultat actuel :
+europeFrench,ui,currentResultEmpty,,Choisissez Mouvement Parole Énergie et Attitude pour voir le résultat.
+europeFrench,ui,resultMatchSuffix,, (correspond à la cible)
+europeFrench,personalities,sweetie,name,Doux
+europeFrench,personalities,sweetie,inGameName,Doux
+europeFrench,personalities,charmer,name,Charmeur
+europeFrench,personalities,charmer,inGameName,Charmeur
+europeFrench,personalities,strategist,name,Stratège
+europeFrench,personalities,strategist,inGameName,Stratège
+europeFrench,personalities,achiever,name,Bosseur
+europeFrench,personalities,achiever,inGameName,Bosseur
+europeFrench,personalities,daydreamer,name,Rêveur
+europeFrench,personalities,daydreamer,inGameName,Rêveur
+europeFrench,personalities,visionary,name,Leader
+europeFrench,personalities,visionary,inGameName,Leader
+europeGerman,ui,pageSubtitle,,Wähle eine Persönlichkeit und stelle passende Regler ein.
+europeGerman,ui,personalityLabel,,Ziel-Persönlichkeit
+europeGerman,ui,slidersHeading,,Regler einstellen
+europeGerman,ui,resultHeading,,Ergebnis
+europeGerman,ui,currentResultLabel,,Aktuelles Ergebnis:
+europeGerman,ui,currentResultEmpty,,Wähle Bewegung Sprechweise Energie und Haltung für ein Ergebnis.
+europeGerman,ui,resultMatchSuffix,, (passt zum Ziel)
+europeGerman,personalities,sweetie,name,Sanft
+europeGerman,personalities,sweetie,inGameName,Sanft
+europeGerman,personalities,observer,name,Beobachter
+europeGerman,personalities,observer,inGameName,Beobachter
+europeGerman,personalities,thinker,name,Denker
+europeGerman,personalities,thinker,inGameName,Denker
+europeGerman,personalities,achiever,name,Macher
+europeGerman,personalities,achiever,inGameName,Macher
+europeGerman,personalities,dynamo,name,Energiebündel
+europeGerman,personalities,dynamo,inGameName,Energiebündel
+australia,personalities,goGetter,name,Trailblazer
+australia,personalities,goGetter,inGameName,Adventurer (Trailblazer)
+australia,personalities,maverick,name,Firebrand
+australia,personalities,maverick,inGameName,Headstrong (Firebrand)
+australia,personalities,cheerleader,name,Upbeat
+australia,personalities,cheerleader,inGameName,Optimist (Upbeat)
+japan,ui,pageTitle,,トモダチコレクション 新生活 性格プランナー
+japan,ui,pageSubtitle,,性格を選んで 条件に合うスライダーを作成しましょう。
+japan,ui,regionLabel,,地域
+japan,ui,personalityLabel,,目標の性格
+japan,ui,slidersHeading,,スライダー設定
+japan,ui,resultHeading,,結果
+japan,ui,currentResultLabel,,現在の結果：
+japan,ui,currentResultEmpty,,動き・話し方・感情・考え方を選ぶと結果が表示されます。
+japan,ui,rangeText,,目標範囲：動き + 話し方 {ms}、感情 + 考え方 {ea}。
+japan,ui,resultMatchSuffix,,（目標と一致）
+japan,ui,weightingNote,,話し方と考え方は 性格計算で重みづけが異なります。
+japan,ui,overallNote,,性格判定には未使用
+japan,groups,easygoing,,のんびり
+japan,groups,energetic,,アクティブ
+japan,groups,reserved,,おちつき
+japan,groups,confident,,じしん家
+japan,sliderLabels,movement,label,動き
+japan,sliderLabels,movement,left,ゆっくり
+japan,sliderLabels,movement,right,すばやい
+japan,sliderLabels,speech,label,話し方
+japan,sliderLabels,speech,left,ていねい
+japan,sliderLabels,speech,right,はっきり
+japan,sliderLabels,energy,label,感情
+japan,sliderLabels,energy,left,おだやか
+japan,sliderLabels,energy,right,はげしい
+japan,sliderLabels,attitude,label,考え方
+japan,sliderLabels,attitude,left,まじめ
+japan,sliderLabels,attitude,right,のびのび
+japan,sliderLabels,overall,label,全体
+japan,sliderLabels,overall,left,ふつう
+japan,sliderLabels,overall,right,個性的
+southKorea,ui,pageTitle,,미 톰오다치 라이프 성격 플래너
+southKorea,ui,pageSubtitle,,성격을 고른 뒤 슬라이더를 맞춰 보세요.
+southKorea,ui,regionLabel,,지역
+southKorea,ui,personalityLabel,,목표 성격
+southKorea,ui,slidersHeading,,슬라이더 설정
+southKorea,ui,resultHeading,,결과
+southKorea,ui,currentResultLabel,,현재 결과:
+southKorea,ui,resultMatchSuffix,, (목표와 일치)
+southKorea,groups,easygoing,,느긋함
+southKorea,groups,energetic,,활발함
+southKorea,groups,reserved,,신중함
+southKorea,groups,confident,,자신감
+southKorea,sliderLabels,movement,label,움직임
+southKorea,sliderLabels,movement,left,느림
+southKorea,sliderLabels,movement,right,빠름
+southKorea,sliderLabels,speech,label,말투
+southKorea,sliderLabels,speech,left,공손
+southKorea,sliderLabels,speech,right,직설
+southKorea,sliderLabels,energy,label,에너지
+southKorea,sliderLabels,energy,left,차분
+southKorea,sliderLabels,energy,right,강함
+southKorea,sliderLabels,attitude,label,태도
+southKorea,sliderLabels,attitude,left,진지
+southKorea,sliderLabels,attitude,right,느긋
+southKorea,sliderLabels,overall,label,전체
+southKorea,sliderLabels,overall,left,보통
+southKorea,sliderLabels,overall,right,개성
+southKorea,personalities,sweetie,name,다정형
+southKorea,personalities,sweetie,inGameName,다정형
+southKorea,personalities,observer,name,관찰형
+southKorea,personalities,observer,inGameName,관찰형
+southKorea,personalities,achiever,name,성취형
+southKorea,personalities,achiever,inGameName,성취형
+southKorea,personalities,visionary,name,리더형
+southKorea,personalities,visionary,inGameName,리더형
