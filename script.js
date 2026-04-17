@@ -31,18 +31,18 @@ const BASE_EN_UI = {
   slidersHeading: 'Set your sliders',
   resultHeading: 'Result',
   currentResultLabel: 'Current result:',
-  currentResultEmpty: 'Select Movement, Speech, Energy, and Attitude to see your result.',
+  currentResultEmpty: 'Select Movement, Speech, Expressiveness, and Attitude to see your result.',
   msSumLabel: 'Movement + Speech sum:',
-  eaSumLabel: 'Energy + Attitude sum:',
+  eaSumLabel: 'Expressiveness + Attitude sum:',
   msRangeLabel: 'Target Movement + Speech range:',
-  eaRangeLabel: 'Target Energy + Attitude range:',
+  eaRangeLabel: 'Target Expressiveness + Attitude range:',
   totalBuildsLabel: 'Total valid builds (including Overall):',
   msPairsSummary: 'Show valid Movement/Speech pairs',
-  eaPairsSummary: 'Show valid Energy/Attitude pairs',
-  rangeText: 'Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}.',
+  eaPairsSummary: 'Show valid Expressiveness/Attitude pairs',
+  rangeText: 'Target ranges: Movement + Speech {ms}, Expressiveness + Attitude {ea}.',
   combinationsText: '{count} combinations',
   pairTitleMs: 'Movement + Speech',
-  pairTitleEa: 'Energy + Attitude',
+  pairTitleEa: 'Expressiveness + Attitude',
   pairText: '{title} pairs ({count}):',
   resultText: '{name} — {group}{matchSuffix}',
   resultMatchSuffix: ' (matches target)'
@@ -58,9 +58,9 @@ const BASE_EN_GROUPS = {
 const BASE_EN_SLIDERS = {
   movement: ['Movement', 'Slow', 'Quick'],
   speech: ['Speech', 'Polite', 'Direct'],
-  energy: ['Energy', 'Flat', 'Intense'],
+  energy: ['Expressiveness', 'Flat', 'Varied'],
   attitude: ['Attitude', 'Serious', 'Relaxed'],
-  overall: ['Overall', 'Normal', 'Quirky']
+  overall: ['Overall', 'Quirky', 'Normal']
 };
 
 const BASE_PERSONALITIES = {
@@ -458,8 +458,8 @@ function renderSliders(goal) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'box';
-      btn.textContent = i;
-      btn.setAttribute('aria-label', `${label} ${i}`);
+      btn.textContent = mappedValue(key, i);
+      btn.setAttribute('aria-label', `${label} ${mappedValue(key, i)}`);
 
       const allowed = isAllowedForGoal(key, i, goal);
       if (allowed) {
