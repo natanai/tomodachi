@@ -9,7 +9,13 @@ const BAND_LABELS = ['0–3', '4–7', '8–11', '12–15'];
 
 // The personality algorithm is intentionally based on mapped internal values.
 // UI sliders now display those mapped values so the visuals match the real math.
-const { SLOT_GRID, REGION_OPTIONS, resolvePersonalityDataset, getPersonalityKeyForSlot, buildRegionsFromSheet, buildDatasetsFromRegions } = PersonalityLocalization;
+const {
+  SLOT_GRID,
+  resolvePersonalityDataset,
+  getPersonalityKeyForSlot,
+  buildRegionsFromSheet,
+  buildRegionRouting
+} = PersonalityLocalization;
 
 const BASE_EN_UI = {
   pageTitle: 'Tomodachi Life Mii Personality Planner',
@@ -65,6 +71,8 @@ const BASE_PERSONALITIES = {
 };
 
 let DATASETS = {};
+let REGION_OPTIONS = [];
+let REGION_DATASET_ALIASES = {};
 
 async function loadRegions() {
   const response = await fetch('localizations.csv', { cache: 'no-store' });
@@ -73,7 +81,14 @@ async function loadRegions() {
   }
   const csvText = await response.text();
   const regions = buildRegionsFromSheet(csvText);
-  DATASETS = buildDatasetsFromRegions(regions, BASE_PERSONALITIES);
+  const routing = buildRegionRouting(regions, BASE_PERSONALITIES);
+  DATASETS = routing.datasets;
+  REGION_OPTIONS = routing.options;
+  REGION_DATASET_ALIASES = routing.aliasMap;
+
+  if (REGION_OPTIONS.length === 0) {
+    throw new Error('No selectable regions were found in localizations.csv.');
+  }
 }
 
 const SLIDER_KEYS = ['movement', 'speech', 'energy', 'attitude', 'overall'];
@@ -130,10 +145,7 @@ function renderRegionOptions() {
 }
 
 function getRegionContext(regionKey) {
-  // Australia and New Zealand use the British-English (EU/PAL) personality label set.
-  // Keep region selection separate from personality dataset resolution so display names
-  // can vary by locale without changing the underlying personality slot IDs.
-  const datasetKey = resolvePersonalityDataset(regionKey);
+  const datasetKey = resolvePersonalityDataset(regionKey, REGION_DATASET_ALIASES);
   const dataset = DATASETS[datasetKey] || DATASETS.en_us;
   const ui = PersonalityLocalization.deepMerge(BASE_EN_UI, dataset.ui);
   const groups = normalizeGroupLabels(dataset.groups);

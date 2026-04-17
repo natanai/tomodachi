@@ -25,44 +25,16 @@
     'blue.4': 'maverick'
   };
 
-  const REGION_DATASET_ALIASES = {
-    northamerica: 'en_us',
-    na: 'en_us',
-    us: 'en_us',
-    america: 'en_us',
-    europe: 'en_gb',
-    uk: 'en_gb',
-    gb: 'en_gb',
-    ie: 'en_gb',
-    pal: 'en_gb',
-    europeenglish: 'en_gb',
-    australia: 'en_gb',
-    au: 'en_gb',
-    newzealand: 'en_gb',
-    nz: 'en_gb',
-    ausnz: 'en_gb',
-    japan: 'ja_jp',
-    jp: 'ja_jp',
-    korea: 'ko_kr',
-    southkorea: 'ko_kr',
-    kr: 'ko_kr'
-  };
-
-  const REGION_OPTIONS = [
-    { key: 'northAmerica', label: 'North America' },
-    { key: 'europe', label: 'Europe / UK / PAL' },
-    { key: 'australia', label: 'Australia / New Zealand' },
-    { key: 'japan', label: '日本' },
-    { key: 'korea', label: '대한민국' }
-  ];
-
   function normalizeRegionKey(regionKey) {
     return String(regionKey || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   }
 
-  function resolvePersonalityDataset(regionKey) {
+  function resolvePersonalityDataset(regionKey, aliasMap) {
+    if (!aliasMap || typeof aliasMap !== 'object') {
+      throw new Error('resolvePersonalityDataset requires a routing alias map.');
+    }
     const normalized = normalizeRegionKey(regionKey);
-    return REGION_DATASET_ALIASES[normalized] || 'en_us';
+    return aliasMap[normalized] || 'en_us';
   }
 
   function getPersonalityKeyForSlot(slotId) {
@@ -134,6 +106,10 @@
           code: region,
           lang: 'en',
           regionLabel: region,
+          datasetKey: '',
+          sourceRegion: '',
+          aliases: [],
+          selectable: false,
           ui: {},
           groups: {},
           sliderLabels: {},
@@ -145,6 +121,15 @@
       if (category === 'meta') {
         if (key === 'lang') record.lang = value || 'en';
         if (key === 'regionLabel') record.regionLabel = value || region;
+        if (key === 'datasetKey') record.datasetKey = value;
+        if (key === 'sourceRegion') record.sourceRegion = value;
+        if (key === 'aliases') {
+          record.aliases = value
+            .split('|')
+            .map((item) => item.trim())
+            .filter(Boolean);
+        }
+        if (key === 'selectable') record.selectable = value.toLowerCase() === 'true';
         continue;
       }
 
@@ -186,6 +171,10 @@
         code: region.code,
         lang: region.lang || 'en',
         regionLabel: region.regionLabel,
+        datasetKey: region.datasetKey,
+        sourceRegion: region.sourceRegion,
+        aliases: region.aliases,
+        selectable: region.selectable,
         ui: deepMerge(northAmerica.ui, region.ui),
         groups: deepMerge(northAmerica.groups, region.groups),
         sliderLabels: deepMerge(northAmerica.sliderLabels, region.sliderLabels),
@@ -196,42 +185,51 @@
     return finalRegions;
   }
 
-  function buildDatasetsFromRegions(regions, basePersonalities) {
-    return {
-      en_us: {
-        datasetKey: 'en_us',
-        ...regions.northAmerica,
-        personalities: deepMerge(regions.northAmerica.personalities, basePersonalities)
-      },
-      en_gb: {
-        datasetKey: 'en_gb',
-        ...regions.pal,
-        personalities: deepMerge(regions.pal.personalities, basePersonalities)
-      },
-      ja_jp: {
-        datasetKey: 'ja_jp',
-        ...regions.japan,
-        personalities: deepMerge(regions.japan.personalities, basePersonalities)
-      },
-      ko_kr: {
-        datasetKey: 'ko_kr',
-        ...regions.southKorea,
-        personalities: deepMerge(regions.southKorea.personalities, basePersonalities)
+  function buildRegionRouting(regions, basePersonalities) {
+    const fallbackRegion = regions.northAmerica;
+    const options = [];
+    const aliasMap = {};
+    const datasets = {};
+
+    Object.values(regions).forEach((region) => {
+      const datasetKey = region.datasetKey || normalizeRegionKey(region.code);
+      const sourceRegionCode = region.sourceRegion || region.code;
+      const sourceRegion = regions[sourceRegionCode] || fallbackRegion;
+      if (!sourceRegion) {
+        throw new Error(`Unknown sourceRegion '${sourceRegionCode}' configured for '${region.code}'.`);
       }
-    };
+
+      if (region.selectable) {
+        options.push({ key: region.code, label: region.regionLabel });
+      }
+
+      const aliases = [region.code, ...(region.aliases || [])];
+      aliases.forEach((alias) => {
+        aliasMap[normalizeRegionKey(alias)] = datasetKey;
+      });
+
+      if (!datasets[datasetKey]) {
+        datasets[datasetKey] = {
+          datasetKey,
+          ...sourceRegion,
+          personalities: deepMerge(sourceRegion.personalities, basePersonalities)
+        };
+      }
+    });
+
+    return { options, aliasMap, datasets };
   }
 
   const api = {
     SLOT_GRID,
     SLOT_ID_TO_PERSONALITY_KEY,
-    REGION_OPTIONS,
     resolvePersonalityDataset,
     normalizeRegionKey,
     getPersonalityKeyForSlot,
     deepMerge,
     parseCsvRow,
     buildRegionsFromSheet,
-    buildDatasetsFromRegions
+    buildRegionRouting
   };
 
   if (typeof module !== 'undefined' && module.exports) {

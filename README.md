@@ -18,12 +18,13 @@ A small static web app that helps you target a specific **Tomodachi Life persona
 
 1. On load, the app fetches `localizations.csv`.
 2. `personality-localization.js` parses CSV rows into region objects (UI labels, group labels, slider labels, and personality names).
-3. Regions are transformed into canonical personality datasets (`en_us`, `en_gb`, `ja_jp`, `ko_kr`).
-4. The selected dropdown region is resolved to one canonical dataset alias (for example, Australia -> `en_gb`).
-5. `script.js` computes personality slots using banded sums from:
+3. Region metadata (`datasetKey`, `sourceRegion`, `aliases`, `selectable`) is parsed from the sheet.
+4. Regions are transformed into canonical personality datasets and dropdown options directly from those metadata rows.
+5. The selected region key is resolved to one canonical dataset alias (for example, `australia` -> `en_gb`).
+6. `script.js` computes personality slots using banded sums from:
    - Movement + Speech
    - Energy + Attitude
-6. The current slot is mapped to a personality key, then localized name/text is rendered.
+7. The current slot is mapped to a personality key, then localized name/text is rendered.
 
 ## Repository structure
 
@@ -39,8 +40,8 @@ A small static web app that helps you target a specific **Tomodachi Life persona
   - Localization/data plumbing:
     - CSV parsing
     - deep merge fallback behavior
-    - region-to-dataset alias resolution
-    - region option list for the dropdown
+    - sheet-driven region routing (`datasetKey`, `sourceRegion`, `aliases`, `selectable`)
+    - region-to-dataset alias resolution + dropdown option generation
 - `localizations.csv`
   - Source-of-truth localization sheet for:
     - metadata (`meta`)
@@ -87,7 +88,7 @@ region,category,key,subkey,value
 Categories:
 
 - `meta`
-  - `lang`, `regionLabel`
+  - `lang`, `regionLabel`, `datasetKey`, `sourceRegion`, `aliases`, `selectable`
 - `ui`
   - page labels, hints, result templates
 - `groups`
@@ -101,24 +102,20 @@ Categories:
 
 - `northAmerica` rows are required and act as the baseline fallback.
 - For each region, missing fields are deep-merged from `northAmerica`.
-- Canonical datasets are built from specific region records:
-  - `en_us` <- `northAmerica`
-  - `en_gb` <- `pal`
-  - `ja_jp` <- `japan`
-  - `ko_kr` <- `southKorea`
+- Dataset and dropdown behavior is fully sheet-driven via `meta` rows:
+  - `datasetKey`: canonical dataset ID (e.g. `en_gb`)
+  - `sourceRegion`: which region record supplies dataset text
+  - `aliases`: additional accepted keys for URL/localStorage
+  - `selectable`: whether region appears in the dropdown
 
 ## Guide: add more localizations/regions to the Region dropdown
 
 Use this checklist when adding a new region or locale.
 
-### Step 1: Decide if this is an alias or a new canonical dataset
+### Step 1: Decide the region behavior you want
 
-- **Alias only** (recommended if text should match an existing canonical dataset):
-  - Example: adding `newZealand` that should behave like `en_gb`
-  - You only need region option + alias mapping.
-- **New canonical dataset** (needed when it should have its own independent text set):
-  - Example: adding a new language with unique strings
-  - You must add dataset-construction support in code.
+- **Standalone dataset**: region has its own text set (`datasetKey` points to itself).
+- **Alias-only region**: region should reuse another region's text (`sourceRegion` points to that region).
 
 ### Step 2: Add/verify localization rows in `localizations.csv`
 
@@ -133,43 +130,25 @@ Then add any override rows you need (`ui`, `groups`, `sliderLabels`, `personalit
 
 > Tip: You can add partial translations first. Missing keys fall back to `northAmerica`.
 
-### Step 3: Add the region to the dropdown options
+### Step 3: Configure region routing in CSV metadata (no JS edits)
 
-Edit `REGION_OPTIONS` in `personality-localization.js`:
+Add these optional `meta` rows for your region:
 
-```js
-{ key: 'newRegionCode', label: 'Display Name' }
+```csv
+newRegionCode,meta,datasetKey,,xx_xx
+newRegionCode,meta,sourceRegion,,pal
+newRegionCode,meta,aliases,,shortCode|alternateName
+newRegionCode,meta,selectable,,true
 ```
 
-This controls what users can select in the UI.
+- `datasetKey`: canonical dataset identifier used internally.
+- `sourceRegion`: which CSV region provides text for this dataset (defaults to the region itself).
+- `aliases`: `|`-separated alternate keys accepted from URL/localStorage.
+- `selectable`: `true` to show this region in the dropdown.
 
-### Step 4: Wire region key -> canonical dataset alias
+The site now builds dropdown options, alias resolution, and dataset wiring directly from this sheet metadata.
 
-Edit `REGION_DATASET_ALIASES` in `personality-localization.js` so normalized keys resolve correctly:
-
-```js
-newregioncode: 'en_gb' // or en_us / ja_jp / ko_kr / your new dataset key
-```
-
-Add useful aliases/synonyms too (e.g. short codes).
-
-### Step 5 (only for brand-new canonical datasets): extend dataset builder
-
-If you are introducing a **new dataset key** (not one of `en_us`, `en_gb`, `ja_jp`, `ko_kr`), update `buildDatasetsFromRegions` in `personality-localization.js` to return it.
-
-Example pattern:
-
-```js
-xx_xx: {
-  datasetKey: 'xx_xx',
-  ...regions.newRegionCode,
-  personalities: deepMerge(regions.newRegionCode.personalities, basePersonalities)
-}
-```
-
-Then point aliases at `xx_xx` in `REGION_DATASET_ALIASES`.
-
-### Step 6: Verify behavior locally
+### Step 4: Verify behavior locally
 
 Run:
 
@@ -183,7 +162,7 @@ Add/update tests in `localization.test.js` for:
 - expected localized personality label differences (if any)
 - stability of slot mapping across regions
 
-### Step 7: Manual smoke check
+### Step 5: Manual smoke check
 
 Open the site, select your new region in the dropdown, and verify:
 
