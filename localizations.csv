@@ -16,7 +16,7 @@ japan,meta,regionLabel,,日本
 southKorea,meta,lang,,ko
 southKorea,meta,regionLabel,,대한민국
 northAmerica,ui,pageTitle,,Tomodachi Life Mii Personality Planner
-northAmerica,ui,pageSubtitle,,Pick a personality, then build sliders that match it.
+northAmerica,ui,pageSubtitle,,
 northAmerica,ui,regionLabel,,Region
 northAmerica,ui,personalityLabel,,Target personality
 northAmerica,ui,freePlacementOption,,Place Freely
@@ -160,7 +160,7 @@ pal,personalities,rogue,name,Individualist
 pal,personalities,rogue,inGameName,Individualist
 pal,personalities,maverick,name,Headstrong
 pal,personalities,maverick,inGameName,Headstrong
-europeFrench,ui,pageSubtitle,,Choisis une personnalité puis ajuste les curseurs correspondants.
+europeFrench,ui,pageSubtitle,,
 europeFrench,ui,regionLabel,,Région
 europeFrench,ui,personalityLabel,,Personnalité cible
 europeFrench,ui,slidersHeading,,Réglez vos curseurs
@@ -180,7 +180,7 @@ europeFrench,personalities,daydreamer,name,Rêveur
 europeFrench,personalities,daydreamer,inGameName,Rêveur
 europeFrench,personalities,visionary,name,Leader
 europeFrench,personalities,visionary,inGameName,Leader
-europeGerman,ui,pageSubtitle,,Wähle eine Persönlichkeit und stelle passende Regler ein.
+europeGerman,ui,pageSubtitle,,
 europeGerman,ui,personalityLabel,,Ziel-Persönlichkeit
 europeGerman,ui,slidersHeading,,Regler einstellen
 europeGerman,ui,resultHeading,,Ergebnis
@@ -204,7 +204,7 @@ australia,personalities,maverick,inGameName,Headstrong (Firebrand)
 australia,personalities,cheerleader,name,Upbeat
 australia,personalities,cheerleader,inGameName,Optimist (Upbeat)
 japan,ui,pageTitle,,トモダチコレクション 新生活 性格プランナー
-japan,ui,pageSubtitle,,性格を選んで 条件に合うスライダーを作成しましょう。
+japan,ui,pageSubtitle,,
 japan,ui,regionLabel,,地域
 japan,ui,personalityLabel,,目標の性格
 japan,ui,slidersHeading,,スライダー設定
@@ -235,7 +235,7 @@ japan,sliderLabels,overall,label,全体
 japan,sliderLabels,overall,left,ふつう
 japan,sliderLabels,overall,right,個性的
 southKorea,ui,pageTitle,,미 톰오다치 라이프 성격 플래너
-southKorea,ui,pageSubtitle,,성격을 고른 뒤 슬라이더를 맞춰 보세요.
+southKorea,ui,pageSubtitle,,
 southKorea,ui,regionLabel,,지역
 southKorea,ui,personalityLabel,,목표 성격
 southKorea,ui,slidersHeading,,슬라이더 설정
