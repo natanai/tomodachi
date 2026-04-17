@@ -18,7 +18,7 @@ const PERSONALITY_GRID = [
 
 const BASE_EN_UI = {
   pageTitle: 'Tomodachi Life Mii Personality Planner',
-  pageSubtitle: 'Pick a personality, then build sliders that match it.',
+  pageSubtitle: '',
   regionLabel: 'Region',
   personalityLabel: 'Target personality',
   freePlacementOption: 'Place Freely',
