@@ -1,0 +1,158 @@
+region_code,lang,region_label,path,value
+northAmerica,en,North America,ui.pageTitle,Tomodachi Life Mii Personality Planner
+northAmerica,en,North America,ui.pageSubtitle,"Pick a personality, then build sliders that match it."
+northAmerica,en,North America,ui.regionLabel,Region
+northAmerica,en,North America,ui.personalityLabel,Target personality
+northAmerica,en,North America,ui.freePlacementOption,Place Freely
+northAmerica,en,North America,ui.freePlacementDescription,"No target restrictions. Pick any slider values to see the resulting personality."
+northAmerica,en,North America,ui.hintText,"Click a number to select it. Grayed-out options can’t be used for this target."
+northAmerica,en,North America,ui.slidersHeading,Set your sliders
+northAmerica,en,North America,ui.resultHeading,Result
+northAmerica,en,North America,ui.currentResultLabel,Current result:
+northAmerica,en,North America,ui.currentResultEmpty,"Select Movement, Speech, Energy, and Attitude to see your result."
+northAmerica,en,North America,ui.rangeText,"Target ranges: Movement + Speech {ms}, Energy + Attitude {ea}."
+northAmerica,en,North America,ui.resultText,{name} — {group}{matchSuffix}
+northAmerica,en,North America,ui.resultMatchSuffix, (matches target)
+northAmerica,en,North America,ui.weightingNote,Speech and Attitude are weighted differently in the game’s personality math.
+northAmerica,en,North America,ui.overallNote,not used for personality
+northAmerica,en,North America,groups.easygoing,Considerate
+northAmerica,en,North America,groups.energetic,Outgoing
+northAmerica,en,North America,groups.reserved,Reserved
+northAmerica,en,North America,groups.confident,Ambitious
+northAmerica,en,North America,sliderLabels.movement,Movement|Slow|Quick
+northAmerica,en,North America,sliderLabels.speech,Speech|Polite|Honest
+northAmerica,en,North America,sliderLabels.energy,Energy|Flat|Varied
+northAmerica,en,North America,sliderLabels.attitude,Thinking|Serious|Chill
+northAmerica,en,North America,sliderLabels.overall,Overall|Normal|Quirky
+europeEnglish,en,Europe (English),personalities.sweetie.name,Softie
+europeEnglish,en,Europe (English),personalities.sweetie.inGameName,Softie
+europeEnglish,en,Europe (English),personalities.strategist.name,Free Spirit
+europeEnglish,en,Europe (English),personalities.strategist.inGameName,Free Spirit
+europeEnglish,en,Europe (English),personalities.achiever.name,Busy Bee
+europeEnglish,en,Europe (English),personalities.achiever.inGameName,Busy Bee
+europeEnglish,en,Europe (English),personalities.buddy.name,Carer
+europeEnglish,en,Europe (English),personalities.buddy.inGameName,Carer
+europeEnglish,en,Europe (English),personalities.goGetter.name,Adventurer
+europeEnglish,en,Europe (English),personalities.goGetter.inGameName,Adventurer
+europeEnglish,en,Europe (English),personalities.cheerleader.name,Optimist
+europeEnglish,en,Europe (English),personalities.cheerleader.inGameName,Optimist
+europeEnglish,en,Europe (English),personalities.merrymaker.name,Bubbly
+europeEnglish,en,Europe (English),personalities.merrymaker.inGameName,Bubbly
+europeEnglish,en,Europe (English),personalities.daydreamer.name,Dreamer
+europeEnglish,en,Europe (English),personalities.daydreamer.inGameName,Dreamer
+europeEnglish,en,Europe (English),personalities.dynamo.name,Hot-Blooded
+europeEnglish,en,Europe (English),personalities.dynamo.inGameName,Hot-Blooded
+europeEnglish,en,Europe (English),personalities.visionary.name,Leader
+europeEnglish,en,Europe (English),personalities.visionary.inGameName,Leader
+europeEnglish,en,Europe (English),personalities.observer.name,Introvert
+europeEnglish,en,Europe (English),personalities.observer.inGameName,Introvert
+europeEnglish,en,Europe (English),personalities.rogue.name,Individualist
+europeEnglish,en,Europe (English),personalities.rogue.inGameName,Individualist
+europeEnglish,en,Europe (English),personalities.maverick.name,Headstrong
+europeEnglish,en,Europe (English),personalities.maverick.inGameName,Headstrong
+europeFrench,fr,Europe (Français),ui.pageSubtitle,"Choisis une personnalité, puis ajuste les curseurs correspondants."
+europeFrench,fr,Europe (Français),ui.regionLabel,Région
+europeFrench,fr,Europe (Français),ui.personalityLabel,Personnalité cible
+europeFrench,fr,Europe (Français),ui.slidersHeading,Réglez vos curseurs
+europeFrench,fr,Europe (Français),ui.resultHeading,Résultat
+europeFrench,fr,Europe (Français),ui.currentResultLabel,Résultat actuel :
+europeFrench,fr,Europe (Français),ui.currentResultEmpty,"Choisissez Mouvement, Parole, Énergie et Attitude pour voir le résultat."
+europeFrench,fr,Europe (Français),ui.resultMatchSuffix, (correspond à la cible)
+europeFrench,fr,Europe (Français),personalities.sweetie.name,Doux
+europeFrench,fr,Europe (Français),personalities.sweetie.inGameName,Doux
+europeFrench,fr,Europe (Français),personalities.charmer.name,Charmeur
+europeFrench,fr,Europe (Français),personalities.charmer.inGameName,Charmeur
+europeFrench,fr,Europe (Français),personalities.strategist.name,Stratège
+europeFrench,fr,Europe (Français),personalities.strategist.inGameName,Stratège
+europeFrench,fr,Europe (Français),personalities.achiever.name,Bosseur
+europeFrench,fr,Europe (Français),personalities.achiever.inGameName,Bosseur
+europeFrench,fr,Europe (Français),personalities.daydreamer.name,Rêveur
+europeFrench,fr,Europe (Français),personalities.daydreamer.inGameName,Rêveur
+europeFrench,fr,Europe (Français),personalities.visionary.name,Leader
+europeFrench,fr,Europe (Français),personalities.visionary.inGameName,Leader
+europeGerman,de,Europe (Deutsch),ui.pageSubtitle,Wähle eine Persönlichkeit und stelle passende Regler ein.
+europeGerman,de,Europe (Deutsch),ui.personalityLabel,Ziel-Persönlichkeit
+europeGerman,de,Europe (Deutsch),ui.slidersHeading,Regler einstellen
+europeGerman,de,Europe (Deutsch),ui.resultHeading,Ergebnis
+europeGerman,de,Europe (Deutsch),ui.currentResultLabel,Aktuelles Ergebnis:
+europeGerman,de,Europe (Deutsch),ui.currentResultEmpty,"Wähle Bewegung, Sprechweise, Energie und Haltung für ein Ergebnis."
+europeGerman,de,Europe (Deutsch),ui.resultMatchSuffix, (passt zum Ziel)
+europeGerman,de,Europe (Deutsch),personalities.sweetie.name,Sanft
+europeGerman,de,Europe (Deutsch),personalities.sweetie.inGameName,Sanft
+europeGerman,de,Europe (Deutsch),personalities.observer.name,Beobachter
+europeGerman,de,Europe (Deutsch),personalities.observer.inGameName,Beobachter
+europeGerman,de,Europe (Deutsch),personalities.thinker.name,Denker
+europeGerman,de,Europe (Deutsch),personalities.thinker.inGameName,Denker
+europeGerman,de,Europe (Deutsch),personalities.achiever.name,Macher
+europeGerman,de,Europe (Deutsch),personalities.achiever.inGameName,Macher
+europeGerman,de,Europe (Deutsch),personalities.dynamo.name,Energiebündel
+europeGerman,de,Europe (Deutsch),personalities.dynamo.inGameName,Energiebündel
+australia,en,Australia / New Zealand,personalities.goGetter.name,Trailblazer
+australia,en,Australia / New Zealand,personalities.goGetter.inGameName,Adventurer (Trailblazer)
+australia,en,Australia / New Zealand,personalities.maverick.name,Firebrand
+australia,en,Australia / New Zealand,personalities.maverick.inGameName,Headstrong (Firebrand)
+australia,en,Australia / New Zealand,personalities.cheerleader.name,Upbeat
+australia,en,Australia / New Zealand,personalities.cheerleader.inGameName,Optimist (Upbeat)
+japan,ja,日本,ui.pageTitle,トモダチコレクション 新生活 性格プランナー
+japan,ja,日本,ui.pageSubtitle,性格を選んで、条件に合うスライダーを作成しましょう。
+japan,ja,日本,ui.regionLabel,地域
+japan,ja,日本,ui.personalityLabel,目標の性格
+japan,ja,日本,ui.hintText,数字を押して選択します。グレーの数字はこの目標では使えません。
+japan,ja,日本,ui.slidersHeading,スライダー設定
+japan,ja,日本,ui.resultHeading,結果
+japan,ja,日本,ui.currentResultLabel,現在の結果：
+japan,ja,日本,ui.currentResultEmpty,動き・話し方・感情・考え方を選ぶと結果が表示されます。
+japan,ja,日本,ui.rangeText,目標範囲：動き + 話し方 {ms}、感情 + 考え方 {ea}。
+japan,ja,日本,ui.resultMatchSuffix,（目標と一致）
+japan,ja,日本,ui.weightingNote,話し方と考え方は、性格計算で重みづけが異なります。
+japan,ja,日本,ui.overallNote,性格判定には未使用
+japan,ja,日本,groups.easygoing,のんびり
+japan,ja,日本,groups.energetic,アクティブ
+japan,ja,日本,groups.reserved,おちつき
+japan,ja,日本,groups.confident,じしん家
+japan,ja,日本,sliderLabels.movement,動き|ゆっくり|すばやい
+japan,ja,日本,sliderLabels.speech,話し方|ていねい|はっきり
+japan,ja,日本,sliderLabels.energy,感情|おだやか|はげしい
+japan,ja,日本,sliderLabels.attitude,考え方|まじめ|のびのび
+japan,ja,日本,sliderLabels.overall,全体|ふつう|個性的
+japan,ja,日本,personalities.sweetie.name,やさしい
+japan,ja,日本,personalities.charmer.name,みりょくてき
+japan,ja,日本,personalities.strategist.name,しんちょう
+japan,ja,日本,personalities.achiever.name,しっかり者
+japan,ja,日本,personalities.buddy.name,きづかい上手
+japan,ja,日本,personalities.goGetter.name,チャレンジャー
+japan,ja,日本,personalities.cheerleader.name,ポジティブ
+japan,ja,日本,personalities.merrymaker.name,にぎやか
+japan,ja,日本,personalities.daydreamer.name,ロマンチスト
+japan,ja,日本,personalities.dynamo.name,ねっけつ
+japan,ja,日本,personalities.perfectionist.name,こだわり派
+japan,ja,日本,personalities.visionary.name,リーダー
+japan,ja,日本,personalities.observer.name,クール
+japan,ja,日本,personalities.thinker.name,じっくり
+japan,ja,日本,personalities.rogue.name,マイペース
+japan,ja,日本,personalities.maverick.name,どんどん
+southKorea,ko,대한민국,ui.pageTitle,미 톰오다치 라이프 성격 플래너
+southKorea,ko,대한민국,ui.pageSubtitle,성격을 고른 뒤 슬라이더를 맞춰 보세요.
+southKorea,ko,대한민국,ui.regionLabel,지역
+southKorea,ko,대한민국,ui.personalityLabel,목표 성격
+southKorea,ko,대한민국,ui.slidersHeading,슬라이더 설정
+southKorea,ko,대한민국,ui.resultHeading,결과
+southKorea,ko,대한민국,ui.currentResultLabel,현재 결과:
+southKorea,ko,대한민국,ui.resultMatchSuffix, (목표와 일치)
+southKorea,ko,대한민국,groups.easygoing,느긋함
+southKorea,ko,대한민국,groups.energetic,활발함
+southKorea,ko,대한민국,groups.reserved,신중함
+southKorea,ko,대한민국,groups.confident,자신감
+southKorea,ko,대한민국,sliderLabels.movement,움직임|느림|빠름
+southKorea,ko,대한민국,sliderLabels.speech,말투|공손|직설
+southKorea,ko,대한민국,sliderLabels.energy,에너지|차분|강함
+southKorea,ko,대한민국,sliderLabels.attitude,태도|진지|느긋
+southKorea,ko,대한민국,sliderLabels.overall,전체|보통|개성
+southKorea,ko,대한민국,personalities.sweetie.name,다정형
+southKorea,ko,대한민국,personalities.sweetie.inGameName,다정형
+southKorea,ko,대한민국,personalities.observer.name,관찰형
+southKorea,ko,대한민국,personalities.observer.inGameName,관찰형
+southKorea,ko,대한민국,personalities.achiever.name,성취형
+southKorea,ko,대한민국,personalities.achiever.inGameName,성취형
+southKorea,ko,대한민국,personalities.visionary.name,리더형
+southKorea,ko,대한민국,personalities.visionary.inGameName,리더형

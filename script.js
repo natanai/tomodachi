@@ -93,184 +93,81 @@ function createEnglishRegion(code, regionLabel, overrides = {}) {
   };
 }
 
-const REGIONS = {
-  northAmerica: createEnglishRegion('northAmerica', 'North America', {
-    sliderLabels: {
-      speech: ['Speech', 'Polite', 'Honest'],
-      energy: ['Energy', 'Flat', 'Varied'],
-      attitude: ['Thinking', 'Serious', 'Chill']
+let REGIONS = {};
+
+function parseCsvLine(line) {
+  const values = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+    if (char === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
     }
-  }),
-  europeEnglish: createEnglishRegion('europeEnglish', 'Europe (English)', {
-    personalities: {
-      sweetie: { name: 'Softie', inGameName: 'Softie' },
-      strategist: { name: 'Free Spirit', inGameName: 'Free Spirit' },
-      achiever: { name: 'Busy Bee', inGameName: 'Busy Bee' },
-      buddy: { name: 'Carer', inGameName: 'Carer' },
-      goGetter: { name: 'Adventurer', inGameName: 'Adventurer' },
-      cheerleader: { name: 'Optimist', inGameName: 'Optimist' },
-      merrymaker: { name: 'Bubbly', inGameName: 'Bubbly' },
-      daydreamer: { name: 'Dreamer', inGameName: 'Dreamer' },
-      dynamo: { name: 'Hot-Blooded', inGameName: 'Hot-Blooded' },
-      visionary: { name: 'Leader', inGameName: 'Leader' },
-      observer: { name: 'Introvert', inGameName: 'Introvert' },
-      rogue: { name: 'Individualist', inGameName: 'Individualist' },
-      maverick: { name: 'Headstrong', inGameName: 'Headstrong' }
+    if (char === ',' && !inQuotes) {
+      values.push(current);
+      current = '';
+      continue;
     }
-  }),
-  europeFrench: createEnglishRegion('europeFrench', 'Europe (Français)', {
-    lang: 'fr',
-    ui: {
-      pageSubtitle: 'Choisis une personnalité, puis ajuste les curseurs correspondants.',
-      regionLabel: 'Région',
-      personalityLabel: 'Personnalité cible',
-      slidersHeading: 'Réglez vos curseurs',
-      resultHeading: 'Résultat',
-      currentResultLabel: 'Résultat actuel :',
-      currentResultEmpty: 'Choisissez Mouvement, Parole, Énergie et Attitude pour voir le résultat.',
-      combinationsText: '{count} combinaisons',
-      pairText: 'Paires {title} ({count}) :',
-      resultMatchSuffix: ' (correspond à la cible)'
-    },
-    personalities: {
-      sweetie: { name: 'Doux', inGameName: 'Doux' },
-      charmer: { name: 'Charmeur', inGameName: 'Charmeur' },
-      strategist: { name: 'Stratège', inGameName: 'Stratège' },
-      achiever: { name: 'Bosseur', inGameName: 'Bosseur' },
-      daydreamer: { name: 'Rêveur', inGameName: 'Rêveur' },
-      visionary: { name: 'Leader', inGameName: 'Leader' }
-    }
-  }),
-  europeGerman: createEnglishRegion('europeGerman', 'Europe (Deutsch)', {
-    lang: 'de',
-    ui: {
-      pageSubtitle: 'Wähle eine Persönlichkeit und stelle passende Regler ein.',
-      regionLabel: 'Region',
-      personalityLabel: 'Ziel-Persönlichkeit',
-      slidersHeading: 'Regler einstellen',
-      resultHeading: 'Ergebnis',
-      currentResultLabel: 'Aktuelles Ergebnis:',
-      currentResultEmpty: 'Wähle Bewegung, Sprechweise, Energie und Haltung für ein Ergebnis.',
-      combinationsText: '{count} Kombinationen',
-      pairText: '{title}-Paare ({count}):',
-      resultMatchSuffix: ' (passt zum Ziel)'
-    },
-    personalities: {
-      sweetie: { name: 'Sanft', inGameName: 'Sanft' },
-      observer: { name: 'Beobachter', inGameName: 'Beobachter' },
-      thinker: { name: 'Denker', inGameName: 'Denker' },
-      achiever: { name: 'Macher', inGameName: 'Macher' },
-      dynamo: { name: 'Energiebündel', inGameName: 'Energiebündel' }
-    }
-  }),
-  australia: createEnglishRegion('australia', 'Australia / New Zealand', {
-    personalities: {
-      goGetter: { name: 'Trailblazer', inGameName: 'Adventurer (Trailblazer)' },
-      maverick: { name: 'Firebrand', inGameName: 'Headstrong (Firebrand)' },
-      cheerleader: { name: 'Upbeat', inGameName: 'Optimist (Upbeat)' }
-    }
-  }),
-  japan: {
-    code: 'japan',
-    lang: 'ja',
-    regionLabel: '日本',
-    ui: {
-      pageTitle: 'トモダチコレクション 新生活 性格プランナー',
-      pageSubtitle: '性格を選んで、条件に合うスライダーを作成しましょう。',
-      regionLabel: '地域',
-      personalityLabel: '目標の性格',
-      hintText: '数字を押して選択します。グレーの数字はこの目標では使えません。',
-      slidersHeading: 'スライダー設定',
-      resultHeading: '結果',
-      currentResultLabel: '現在の結果：',
-      currentResultEmpty: '動き・話し方・感情・考え方を選ぶと結果が表示されます。',
-      msSumLabel: '動き + 話し方 の合計：',
-      eaSumLabel: '感情 + 考え方 の合計：',
-      msRangeLabel: '目標の 動き + 話し方 範囲：',
-      eaRangeLabel: '目標の 感情 + 考え方 範囲：',
-      totalBuildsLabel: '有効な組み合わせ数（全体含む）：',
-      msPairsSummary: '有効な動き/話し方の組を表示',
-      eaPairsSummary: '有効な感情/考え方の組を表示',
-      rangeText: '目標範囲：動き + 話し方 {ms}、感情 + 考え方 {ea}。',
-      combinationsText: '{count} 通り',
-      pairTitleMs: '動き + 話し方',
-      pairTitleEa: '感情 + 考え方',
-      pairText: '{title}の組み合わせ（{count}）:',
-      resultText: '{name} — {group}{matchSuffix}',
-      resultMatchSuffix: '（目標と一致）',
-      weightingNote: '話し方と考え方は、性格計算で重みづけが異なります。',
-      overallNote: '性格判定には未使用'
-    },
-    groups: {
-      easygoing: 'のんびり',
-      energetic: 'アクティブ',
-      reserved: 'おちつき',
-      confident: 'じしん家'
-    },
-    sliderLabels: {
-      movement: ['動き', 'ゆっくり', 'すばやい'],
-      speech: ['話し方', 'ていねい', 'はっきり'],
-      energy: ['感情', 'おだやか', 'はげしい'],
-      attitude: ['考え方', 'まじめ', 'のびのび'],
-      overall: ['全体', 'ふつう', '個性的']
-    },
-    personalities: {
-      sweetie: { name: 'やさしい', inGameName: 'やさしい', description: '感受性が高く、まわりの気持ちに寄りそうタイプ。', color: '#f2cf62' },
-      charmer: { name: 'みりょくてき', inGameName: 'みりょくてき', description: '華やかで空気を読むのが得意。新しい環境にもすぐなじめます。', color: '#e68bb3' },
-      strategist: { name: 'しんちょう', inGameName: 'しんちょう', description: 'マイペースで発想豊か。人の目を気にせず自分らしく行動します。', color: '#95c95e' },
-      achiever: { name: 'しっかり者', inGameName: 'しっかり者', description: '計画性があり、やると決めたことを着実に進めるタイプ。', color: '#2f93de' },
-      buddy: { name: 'きづかい上手', inGameName: 'きづかい上手', description: '思いやりがあり、周りを大切にしながら関係をまとめます。', color: '#d7c25e' },
-      goGetter: { name: 'チャレンジャー', inGameName: 'チャレンジャー', description: '大胆で行動力があり、場を明るくする存在です。', color: '#ec709c' },
-      cheerleader: { name: 'ポジティブ', inGameName: 'ポジティブ', description: '前向きで元気。周りまで笑顔にする力があります。', color: '#efc457' },
-      merrymaker: { name: 'にぎやか', inGameName: 'にぎやか', description: '人付き合いが得意で、どんな場面でも明るさを見つけます。', color: '#cd586f' },
-      daydreamer: { name: 'ロマンチスト', inGameName: 'ロマンチスト', description: '理想を大切にし、想像の中からアイデアを見つけるタイプ。', color: '#f0b669' },
-      dynamo: { name: 'ねっけつ', inGameName: 'ねっけつ', description: '意志が強く、自分の直感でぐいぐい進みます。', color: '#ef873b' },
-      perfectionist: { name: 'こだわり派', inGameName: 'こだわり派', description: '細部まで大切にし、ものづくりや工夫に喜びを感じます。', color: '#39c4af' },
-      visionary: { name: 'リーダー', inGameName: 'リーダー', description: '挑戦を恐れず、勢いよく前へ進む力強いタイプ。', color: '#2e7fd8' },
-      observer: { name: 'クール', inGameName: 'クール', description: '感情を表に出しにくいけれど、内面はとても豊かです。', color: '#56c6ca' },
-      thinker: { name: 'じっくり', inGameName: 'じっくり', description: '落ち着いて考えるのが得意で、物事を多角的に見られます。', color: '#37b5ae' },
-      rogue: { name: 'マイペース', inGameName: 'マイペース', description: '知識が豊富で自分の考えをはっきり伝えられます。', color: '#5d78d7' },
-      maverick: { name: 'どんどん', inGameName: 'どんどん', description: '決断が早く、迷わず自分の道を切り開くタイプ。', color: '#8e77d6' }
-    }
-  },
-  southKorea: {
-    code: 'southKorea',
-    lang: 'ko',
-    regionLabel: '대한민국',
-    ui: {
-      ...BASE_EN_UI,
-      pageTitle: '미 톰오다치 라이프 성격 플래너',
-      pageSubtitle: '성격을 고른 뒤 슬라이더를 맞춰 보세요.',
-      regionLabel: '지역',
-      personalityLabel: '목표 성격',
-      slidersHeading: '슬라이더 설정',
-      resultHeading: '결과',
-      currentResultLabel: '현재 결과:',
-      combinationsText: '{count}개 조합',
-      pairText: '{title} 조합 ({count}):',
-      resultMatchSuffix: ' (목표와 일치)'
-    },
-    groups: {
-      easygoing: '느긋함',
-      energetic: '활발함',
-      reserved: '신중함',
-      confident: '자신감'
-    },
-    sliderLabels: {
-      movement: ['움직임', '느림', '빠름'],
-      speech: ['말투', '공손', '직설'],
-      energy: ['에너지', '차분', '강함'],
-      attitude: ['태도', '진지', '느긋'],
-      overall: ['전체', '보통', '개성']
-    },
-    personalities: deepMerge(BASE_PERSONALITIES, {
-      sweetie: { name: '다정형', inGameName: '다정형' },
-      observer: { name: '관찰형', inGameName: '관찰형' },
-      achiever: { name: '성취형', inGameName: '성취형' },
-      visionary: { name: '리더형', inGameName: '리더형' }
-    })
+    current += char;
   }
-};
+  values.push(current);
+  return values;
+}
+
+function setByPath(target, path, value) {
+  const segments = path.split('.');
+  let node = target;
+  for (let i = 0; i < segments.length - 1; i += 1) {
+    const segment = segments[i];
+    if (!node[segment] || typeof node[segment] !== 'object') {
+      node[segment] = {};
+    }
+    node = node[segment];
+  }
+  node[segments[segments.length - 1]] = value;
+}
+
+function buildRegionsFromSpreadsheet(csvText) {
+  const lines = csvText
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  lines.shift();
+  const drafts = {};
+  for (const line of lines) {
+    const [code, lang, regionLabel, path, value] = parseCsvLine(line);
+    if (!code || !path) continue;
+    if (!drafts[code]) drafts[code] = { code, lang: lang || 'en', regionLabel };
+    const parsedValue = path.startsWith('sliderLabels.') ? value.split('|') : value;
+    setByPath(drafts[code], path, parsedValue);
+  }
+
+  const regions = {};
+  Object.values(drafts).forEach((draft) => {
+    regions[draft.code] = createEnglishRegion(draft.code, draft.regionLabel, {
+      lang: draft.lang || 'en',
+      ui: draft.ui || {},
+      groups: draft.groups || {},
+      sliderLabels: draft.sliderLabels || {},
+      personalities: draft.personalities || {}
+    });
+  });
+  return regions;
+}
+
+async function loadRegions() {
+  const response = await fetch('localizations.csv');
+  if (!response.ok) throw new Error('Could not load localizations.csv');
+  const csvText = await response.text();
+  REGIONS = buildRegionsFromSpreadsheet(csvText);
+}
 
 const SLIDER_KEYS = ['movement', 'speech', 'energy', 'attitude', 'overall'];
 
@@ -282,7 +179,7 @@ const picks = {
   overall: null
 };
 
-let currentRegion = REGIONS.northAmerica;
+let currentRegion = null;
 let goals = [];
 
 const regionSelectEl = document.getElementById('regionSelect');
@@ -291,11 +188,13 @@ const goalBandsEl = document.getElementById('goalBands');
 const sliderGridEl = document.getElementById('sliderGrid');
 const currentResultEl = document.getElementById('currentResult');
 
-function initialize() {
+async function initialize() {
+  await loadRegions();
   renderRegionOptions();
-  regionSelectEl.value = 'northAmerica';
+  regionSelectEl.value = REGIONS.northAmerica ? 'northAmerica' : Object.keys(REGIONS)[0];
+  currentRegion = REGIONS[regionSelectEl.value];
   regionSelectEl.addEventListener('change', () => {
-    currentRegion = REGIONS[regionSelectEl.value] || REGIONS.northAmerica;
+    currentRegion = REGIONS[regionSelectEl.value] || Object.values(REGIONS)[0];
     for (const key of SLIDER_KEYS) picks[key] = null;
     setupForRegion();
   });
@@ -579,7 +478,9 @@ function format(template, values) {
   return template.replace(/\{(\w+)\}/g, (_, token) => `${values[token] ?? ''}`);
 }
 
-initialize();
+initialize().catch((error) => {
+  console.error('Failed to initialize localizations', error);
+});
 
 console.assert(mappedValue('speech', 1) === 0, 'speech 1 should map to 0');
 console.assert(mappedValue('speech', 5) === 5, 'speech 5 should map to 5');
