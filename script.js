@@ -9,12 +9,7 @@ const BAND_LABELS = ['0–3', '4–7', '8–11', '12–15'];
 
 // The personality algorithm is intentionally based on mapped internal values.
 // UI sliders now display those mapped values so the visuals match the real math.
-const PERSONALITY_GRID = [
-  ['observer', 'thinker', 'rogue', 'maverick'],
-  ['strategist', 'perfectionist', 'achiever', 'visionary'],
-  ['buddy', 'daydreamer', 'merrymaker', 'dynamo'],
-  ['sweetie', 'cheerleader', 'charmer', 'goGetter']
-];
+const { SLOT_GRID, REGION_OPTIONS, resolvePersonalityDataset, getPersonalityKeyForSlot, buildRegionsFromSheet, buildDatasetsFromRegions } = PersonalityLocalization;
 
 const BASE_EN_UI = {
   pageTitle: 'Tomodachi Life Mii Personality Planner',
@@ -36,10 +31,10 @@ const BASE_EN_UI = {
 };
 
 const BASE_EN_GROUPS = {
-  easygoing: 'Considerate',
-  energetic: 'Outgoing',
-  reserved: 'Reserved',
-  confident: 'Ambitious'
+  yellow: 'Considerate',
+  green: 'Reserved',
+  red: 'Outgoing',
+  blue: 'Ambitious'
 };
 
 const BASE_EN_SLIDERS = {
@@ -69,142 +64,7 @@ const BASE_PERSONALITIES = {
   maverick: { color: '#8e77d6' }
 };
 
-let REGIONS = {};
-
-function deepMerge(base, override) {
-  const output = Array.isArray(base) ? [...base] : { ...(base || {}) };
-  for (const [key, value] of Object.entries(override || {})) {
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      output[key] = deepMerge(base?.[key] || {}, value);
-    } else {
-      output[key] = value;
-    }
-  }
-  return output;
-}
-
-function parseCsvRow(line) {
-  const out = [];
-  let current = '';
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i += 1) {
-    const char = line[i];
-
-    if (char === '"') {
-      if (inQuotes && line[i + 1] === '"') {
-        current += '"';
-        i += 1;
-      } else {
-        inQuotes = !inQuotes;
-      }
-      continue;
-    }
-
-    if (char === ',' && !inQuotes) {
-      out.push(current.trim());
-      current = '';
-      continue;
-    }
-
-    current += char;
-  }
-
-  out.push(current.trim());
-  return out;
-}
-
-function buildRegionsFromSheet(csvText) {
-  const lines = csvText
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-
-  if (lines.length < 2) {
-    throw new Error('Localization sheet is empty.');
-  }
-
-  const byRegion = {};
-  for (let i = 1; i < lines.length; i += 1) {
-    const parsedRow = parseCsvRow(lines[i]);
-    const [region, category, key, subkey = ''] = parsedRow;
-    const value = parsedRow.slice(4).join(', ').trim();
-    if (!region || !category || !key) continue;
-
-    if (!byRegion[region]) {
-      byRegion[region] = {
-        code: region,
-        lang: 'en',
-        regionLabel: region,
-        ui: {},
-        groups: {},
-        sliderLabels: {},
-        personalities: {}
-      };
-    }
-
-    const record = byRegion[region];
-    if (category === 'meta') {
-      if (key === 'lang') record.lang = value || 'en';
-      if (key === 'regionLabel') record.regionLabel = value || region;
-      continue;
-    }
-
-    if (category === 'ui') {
-      record.ui[key] = value;
-      continue;
-    }
-
-    if (category === 'groups') {
-      record.groups[key] = value;
-      continue;
-    }
-
-    if (category === 'sliderLabels') {
-      if (!record.sliderLabels[key]) {
-        record.sliderLabels[key] = ['','',''];
-      }
-      if (subkey === 'label') record.sliderLabels[key][0] = value;
-      if (subkey === 'left') record.sliderLabels[key][1] = value;
-      if (subkey === 'right') record.sliderLabels[key][2] = value;
-      continue;
-    }
-
-    if (category === 'personalities') {
-      if (!record.personalities[key]) record.personalities[key] = {};
-      if (subkey) record.personalities[key][subkey] = value;
-    }
-  }
-
-  const northAmerica = byRegion.northAmerica;
-  if (!northAmerica) {
-    throw new Error('The sheet must include northAmerica base rows.');
-  }
-
-  const finalRegions = {};
-  for (const regionCode of Object.keys(byRegion)) {
-    const region = byRegion[regionCode];
-    const ui = deepMerge(BASE_EN_UI, deepMerge(northAmerica.ui, region.ui));
-    const groups = deepMerge(BASE_EN_GROUPS, deepMerge(northAmerica.groups, region.groups));
-    const sliderLabels = deepMerge(BASE_EN_SLIDERS, deepMerge(northAmerica.sliderLabels, region.sliderLabels));
-    const personalities = deepMerge(
-      deepMerge(northAmerica.personalities, region.personalities),
-      BASE_PERSONALITIES
-    );
-
-    finalRegions[regionCode] = {
-      code: region.code,
-      lang: region.lang || 'en',
-      regionLabel: region.regionLabel,
-      ui,
-      groups,
-      sliderLabels,
-      personalities
-    };
-  }
-
-  return finalRegions;
-}
+let DATASETS = {};
 
 async function loadRegions() {
   const response = await fetch('localizations.csv', { cache: 'no-store' });
@@ -212,7 +72,8 @@ async function loadRegions() {
     throw new Error(`Unable to load localizations.csv (${response.status})`);
   }
   const csvText = await response.text();
-  REGIONS = buildRegionsFromSheet(csvText);
+  const regions = buildRegionsFromSheet(csvText);
+  DATASETS = buildDatasetsFromRegions(regions, BASE_PERSONALITIES);
 }
 
 const SLIDER_KEYS = ['movement', 'speech', 'energy', 'attitude', 'overall'];
@@ -236,27 +97,66 @@ const currentResultEl = document.getElementById('currentResult');
 
 async function initialize() {
   await loadRegions();
-  currentRegion = REGIONS.northAmerica || Object.values(REGIONS)[0];
+  currentRegion = getRegionContext('northAmerica');
 
   renderRegionOptions();
-  regionSelectEl.value = currentRegion?.code || 'northAmerica';
+  const persistedRegion = new URLSearchParams(window.location.search).get('region')
+    || window.localStorage.getItem('tomodachi.regionKey')
+    || 'northAmerica';
+  regionSelectEl.value = persistedRegion;
+  if (!regionSelectEl.value) regionSelectEl.value = 'northAmerica';
   regionSelectEl.addEventListener('change', () => {
-    currentRegion = REGIONS[regionSelectEl.value] || REGIONS.northAmerica;
+    currentRegion = getRegionContext(regionSelectEl.value);
+    window.localStorage.setItem('tomodachi.regionKey', currentRegion.regionKey);
+    const params = new URLSearchParams(window.location.search);
+    params.set('region', currentRegion.regionKey);
+    window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
     for (const key of SLIDER_KEYS) picks[key] = null;
     setupForRegion();
   });
 
+  currentRegion = getRegionContext(regionSelectEl.value);
   setupForRegion();
 }
 
 function renderRegionOptions() {
   regionSelectEl.innerHTML = '';
-  Object.values(REGIONS).forEach((region) => {
+  REGION_OPTIONS.forEach((region) => {
     const option = document.createElement('option');
-    option.value = region.code;
-    option.textContent = region.regionLabel;
+    option.value = region.key;
+    option.textContent = region.label;
     regionSelectEl.appendChild(option);
   });
+}
+
+function getRegionContext(regionKey) {
+  // Australia and New Zealand use the British-English (EU/PAL) personality label set.
+  // Keep region selection separate from personality dataset resolution so display names
+  // can vary by locale without changing the underlying personality slot IDs.
+  const datasetKey = resolvePersonalityDataset(regionKey);
+  const dataset = DATASETS[datasetKey] || DATASETS.en_us;
+  const ui = PersonalityLocalization.deepMerge(BASE_EN_UI, dataset.ui);
+  const groups = normalizeGroupLabels(dataset.groups);
+  const sliderLabels = PersonalityLocalization.deepMerge(BASE_EN_SLIDERS, dataset.sliderLabels);
+  return {
+    regionKey,
+    datasetKey,
+    lang: dataset.lang || 'en',
+    ui,
+    groups,
+    sliderLabels,
+    personalities: dataset.personalities
+  };
+}
+
+function normalizeGroupLabels(rawGroups = {}) {
+  const translated = {
+    yellow: rawGroups.yellow || rawGroups.easygoing,
+    green: rawGroups.green || rawGroups.reserved,
+    red: rawGroups.red || rawGroups.energetic,
+    blue: rawGroups.blue || rawGroups.confident
+  };
+  return PersonalityLocalization.deepMerge(BASE_EN_GROUPS, translated);
 }
 
 function setupForRegion() {
@@ -291,7 +191,7 @@ function populatePersonalityOptions() {
   freeOption.textContent = currentRegion.ui.freePlacementOption;
   selectEl.appendChild(freeOption);
 
-  const groupOrder = ['easygoing', 'energetic', 'reserved', 'confident'];
+  const groupOrder = ['yellow', 'red', 'green', 'blue'];
 
   groupOrder.forEach((groupKey) => {
     const groupEl = document.createElement('optgroup');
@@ -317,14 +217,16 @@ function populatePersonalityOptions() {
 
 function buildGoals(region) {
   const built = [];
-  for (let row = 0; row < PERSONALITY_GRID.length; row += 1) {
-    for (let col = 0; col < PERSONALITY_GRID[row].length; col += 1) {
-      const personalityKey = PERSONALITY_GRID[row][col];
+  for (let row = 0; row < SLOT_GRID.length; row += 1) {
+    for (let col = 0; col < SLOT_GRID[row].length; col += 1) {
+      const slotId = SLOT_GRID[row][col];
+      const personalityKey = getPersonalityKeyForSlot(slotId);
       const detail = region.personalities[personalityKey];
       built.push({
         id: built.length,
         name: detail.name,
         groupKey: getGroupKey(row, col),
+        slotId,
         msBand: BANDS[col],
         eaBand: BANDS[row],
         msBandLabel: BAND_LABELS[col],
@@ -341,10 +243,10 @@ function getGroupKey(row, col) {
   const lowMs = col <= 1;
   const highEa = row >= 2;
 
-  if (lowMs && highEa) return 'easygoing';
-  if (!lowMs && highEa) return 'energetic';
-  if (lowMs && !highEa) return 'reserved';
-  return 'confident';
+  if (lowMs && highEa) return 'yellow';
+  if (!lowMs && highEa) return 'red';
+  if (lowMs && !highEa) return 'green';
+  return 'blue';
 }
 
 function render() {
@@ -491,7 +393,8 @@ function renderCurrentResult(goal) {
 
   const msBand = findBandIndex(movementMapped + speechMapped);
   const eaBand = findBandIndex(energyMapped + attitudeMapped);
-  const personalityKey = PERSONALITY_GRID[eaBand][msBand];
+  const slotId = SLOT_GRID[eaBand][msBand];
+  const personalityKey = getPersonalityKeyForSlot(slotId);
   const result = currentRegion.personalities[personalityKey];
   const resultGroup = currentRegion.groups[getGroupKey(eaBand, msBand)];
   const matchesGoal = goal ? personalityKey === goal.personalityKey : false;
